@@ -24,12 +24,6 @@ Install dependencies. Make sure you already have [`nodejs`](https://nodejs.org/e
 $ npm install # or yarn
 ```
 
-Run it
-
-```bash
-$ npm start # or yarn start
-```
-
 ## Description
 
 It is an application that allows you to record the state of food products at home, its task is to inform us in a simple and convenient way what products are already ending and which products we still have.
