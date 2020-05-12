@@ -1,6 +1,6 @@
 # home-pantry
 
-https://react-home-pantry-203f8.firebaseapp.com/yourStorage
+https://react-home-pantry-203f8.web.app
 
 <img src="src/assets/screenshots/screenshot.PNG">
 
