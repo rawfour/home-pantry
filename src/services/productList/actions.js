@@ -118,16 +118,9 @@ async function getImageTaskPromise(image) {
   });
 }
 
-export const addProduct = (
-  name,
-  category,
-  image,
-  unit,
-  isMax,
-  isLow,
-  currently,
-  succesMes,
-) => async (dispatch) => {
+export const addProduct = (name, category, image, unit, isMax, isLow, currently) => async (
+  dispatch,
+) => {
   try {
     const url = await getImageTaskPromise(image);
     firebase
@@ -142,6 +135,7 @@ export const addProduct = (
         currently: currently * 1,
         img: url,
       });
+    const succesMes = 'Product added.';
     dispatch({
       type: ADD_PRODUCT,
       payload: succesMes,
@@ -264,7 +258,7 @@ async function updateTaskPromise(id, name, category, unit, currently, currentUrl
   });
 }
 
-export const editProduct = (id, name, category, image, img, unit, currently, succesMes) => async (
+export const editProduct = (id, name, category, image, img, unit, currently) => async (
   dispatch,
 ) => {
   try {
@@ -274,7 +268,7 @@ export const editProduct = (id, name, category, image, img, unit, currently, suc
     }
     await updateTaskPromise(id, name, category, unit, currently, currentUrl);
     const getSingleProduct = await getSingleProductTaskPromise(id);
-
+    const succesMes = 'Changes saved.';
     dispatch({
       type: EDIT_PRODUCT,
       payload: { getSingleProduct, succesMes },

@@ -35,8 +35,7 @@ const EditForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!error.isError) {
-      const succesMes = 'Changes saved.';
-      editProduct(id, name, category, image, img, unit, currently, succesMes);
+      editProduct(id, name, category, image, img, unit, currently);
     }
   };
 
@@ -148,27 +147,9 @@ const mapDispatchToProps = (dispatch) => ({
   setImage: (file) => dispatch(setImageAction(file)),
   fetchSingleProduct: (id) => dispatch(fetchSingleProductAction(id)),
   removeImage: () => dispatch(removeImageAction()),
-  editProduct: (
-    id,
-    nameValue,
-    categoryValue,
-    imageValue,
-    img,
-    unitValue,
-    currentlyValue,
-    succesMes,
-  ) =>
+  editProduct: (id, nameValue, categoryValue, imageValue, img, unitValue, currentlyValue) =>
     dispatch(
-      editProductAction(
-        id,
-        nameValue,
-        categoryValue,
-        imageValue,
-        img,
-        unitValue,
-        currentlyValue,
-        succesMes,
-      ),
+      editProductAction(id, nameValue, categoryValue, imageValue, img, unitValue, currentlyValue),
     ),
 });
 

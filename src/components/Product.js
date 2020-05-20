@@ -1,21 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ProgressBar from 'components/ProgressBar';
 
 const Product = ({ product, openPopUp }) => {
   const { id, name, img, unit, isMax, isLow, currently } = product;
+  const [loaded, setLoaded] = useState(false);
+  const onImageLoaded = () => {
+    setLoaded(true);
+  };
   return (
     <li className="flex mb-4 py-5 px-12 bg-white h-32 rounded">
-      <div className="flex item-center pr-2 w-1/6">
+      <div className="flex items-center pr-2 w-1/6 relative">
         <img
-          className="rounded block"
+          className="product_img rounded block"
           src={img}
           alt={name}
+          onLoad={onImageLoaded}
           style={{
             maxHeight: 100,
           }}
         />
+        {!loaded && (
+          <div className="flex justify-center items-center h-24 w-24 rounded bg-gray-200 absolute">
+            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="37" viewBox="0 0 20 16">
+              <path
+                id="icon-image"
+                d="M4,4H20a2,2,0,0,1,2,2V18a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2.006,2.006,0,0,1,4,4Zm16,8.59V6H4v6.59l4.3-4.3a1,1,0,0,1,1.4,0l5.3,5.3,2.3-2.3a1,1,0,0,1,1.4,0l1.3,1.3Zm0,2.82-2-2-2.3,2.3a1,1,0,0,1-1.4,0L9,10.4l-5,5V18H20ZM15,10a1,1,0,1,1,1-1A1,1,0,0,1,15,10Z"
+                transform="translate(-2 -4)"
+                fill="#fff"
+              />
+            </svg>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center w-1/6 px-2">
