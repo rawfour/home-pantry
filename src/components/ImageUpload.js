@@ -31,7 +31,7 @@ const ImageUpload = ({ image, url, error, setImage, removeImage }) => {
       )}
       <div className="w-full md:w-1/2">
         {url ? (
-          <img className="w-32 shadow rounded mb-6" src={url} alt="product_image" />
+          <img className="shadow rounded mb-6" src={url} alt="product_image" />
         ) : (
           <div className="flex justify-center items-center h-32 w-32 rounded mb-6 bg-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" width="45" height="37" viewBox="0 0 20 16">

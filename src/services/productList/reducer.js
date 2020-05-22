@@ -4,7 +4,6 @@ import {
   OPEN_POPUP,
   CLOSE_POPUP,
   ADD_PRODUCT,
-  FETCH_SINGLE_PRODUCT,
   FETCH_BEGIN,
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
@@ -48,12 +47,6 @@ const productListReducer = (state = initialState, action) => {
         ...state,
         storage: action.payload.getProducts,
         shoppingList: action.payload.makeShoppingList,
-      };
-    case FETCH_SINGLE_PRODUCT:
-      return {
-        ...state,
-        singleProduct: { ...action.payload },
-        loading: false,
       };
     case ADD_PRODUCT:
       return {

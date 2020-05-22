@@ -12,15 +12,18 @@ const Product = ({ product, openPopUp }) => {
   return (
     <li className="flex mb-4 py-5 px-12 bg-white h-32 rounded">
       <div className="flex items-center pr-2 w-1/6 relative">
-        <img
-          className="product_img rounded block"
-          src={img}
-          alt={name}
-          onLoad={onImageLoaded}
-          style={{
-            maxHeight: 100,
-          }}
-        />
+        {img && (
+          <img
+            className="product_img rounded block"
+            src={img}
+            alt={name}
+            onLoad={onImageLoaded}
+            style={{
+              maxHeight: 100,
+            }}
+          />
+        )}
+
         {!loaded && (
           <div className="flex justify-center items-center h-24 w-24 rounded bg-gray-200 absolute">
             <svg xmlns="http://www.w3.org/2000/svg" width="45" height="37" viewBox="0 0 20 16">

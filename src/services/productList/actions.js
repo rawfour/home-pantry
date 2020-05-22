@@ -4,7 +4,6 @@ import {
   OPEN_POPUP,
   CLOSE_POPUP,
   ADD_PRODUCT,
-  FETCH_SINGLE_PRODUCT,
   FETCH_BEGIN,
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
@@ -122,7 +121,10 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
   dispatch,
 ) => {
   try {
-    const url = await getImageTaskPromise(image);
+    let url = null;
+    if (image) {
+      url = await getImageTaskPromise(image);
+    }
     firebase
       .firestore()
       .collection('products')
@@ -168,16 +170,14 @@ async function getSingleProductTaskPromise(productId) {
 }
 
 export const fetchSingleProduct = (productId) => async (dispatch) => {
+  let product;
   try {
     dispatch({ type: FETCH_BEGIN });
-    const getSingleProduct = await getSingleProductTaskPromise(productId);
-    dispatch({
-      type: FETCH_SINGLE_PRODUCT,
-      payload: getSingleProduct,
-    });
+    product = await getSingleProductTaskPromise(productId);
   } catch (showError) {
     console.log('ERR===', showError);
   }
+  return product;
 };
 
 async function getProductsTaskPromise() {

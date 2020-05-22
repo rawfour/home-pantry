@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Input = ({ id, label, name, action, value, type }) => {
+const Input = ({ id, label, name, blur, action, value, type }) => {
   return (
     <>
       {label && (
@@ -17,6 +17,7 @@ const Input = ({ id, label, name, action, value, type }) => {
         id={id}
         type={type}
         name={name}
+        onBlur={blur}
         onChange={action}
         value={value}
       />
@@ -28,6 +29,7 @@ Input.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
+  blur: PropTypes.func.isRequired,
   action: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   type: PropTypes.string.isRequired,
