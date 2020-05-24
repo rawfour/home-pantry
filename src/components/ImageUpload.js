@@ -53,10 +53,14 @@ const ImageUpload = ({ url, setImage }) => {
         </span>
       )}
       <div className="w-full md:w-1/2 pr-6">
-        {preview ? (
-          <img className="shadow rounded mb-6" src={preview} alt="product_image" />
-        ) : (
-          <div className="flex justify-center items-center h-32 w-32 rounded mb-6 bg-gray-200">
+        {preview && (
+          <img className="animated-img shadow rounded mb-6" src={preview} alt="product_image" />
+        )}
+        {!preview && (
+          <label
+            htmlFor="file"
+            className="animated-img flex justify-center items-center h-32 w-32 rounded mb-6 bg-gray-200 cursor-pointer"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="45" height="37" viewBox="0 0 20 16">
               <path
                 id="icon-image"
@@ -65,7 +69,7 @@ const ImageUpload = ({ url, setImage }) => {
                 fill="#fff"
               />
             </svg>
-          </div>
+          </label>
         )}
       </div>
       <input

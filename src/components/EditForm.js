@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
@@ -10,6 +11,22 @@ import {
 import Input from './Input';
 import Select from './Select';
 import ImageUpload from './ImageUpload';
+
+const ValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .matches(/^[a-z]+$/i, {
+      message: 'Product name should contain only letters',
+      excludeEmptyString: true,
+    })
+    .min(2, 'Too Short!')
+    .max(20, 'Too Long!')
+    .required('Required'),
+  currently: Yup.number()
+    .min(0, 'Minimum number of products can be 0')
+    .max(1000000, 'Nice try, but it`s too much')
+    .typeError('Invalid number')
+    .required('Required'),
+});
 
 const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) => {
   const [formData, setFormData] = useState({});
@@ -27,30 +44,14 @@ const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) =>
       {formData.name ? (
         <Formik
           initialValues={formData}
-          validate={(values) => {
-            const errors = {};
-
-            if (!values.name) {
-              errors.name = 'Required';
-            } else if (!/^[a-z]+$/i.test(values.name)) {
-              errors.name = 'Invalid product name';
-            }
-
-            if (!values.currently) {
-              errors.currently = 'Required';
-            } else if (!/^[0-9]/.test(values.currently)) {
-              errors.currently = 'Invalid number';
-            }
-
-            return errors;
-          }}
+          validationSchema={ValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
             const { name, category, unit, currently } = values;
             editProduct(id, name, category, image, formData.img, unit, currently);
             setSubmitting(false);
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
+          {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
             <>
               {actionDone && (
                 <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-600">
@@ -74,8 +75,8 @@ const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) =>
                       blur={handleBlur}
                       action={handleChange}
                       label="Product name"
+                      errorMessage="name"
                     />
-                    {errors.name && touched.name && errors.name}
                     <Select
                       value={values.category}
                       name="category"
@@ -113,10 +114,9 @@ const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) =>
                       id="in_storage"
                       blur={handleBlur}
                       action={handleChange}
-                      label="Current number of products"
+                      label="Have now"
+                      errorMessage="currently"
                     />
-
-                    {errors.currently && touched.currently && errors.currently}
                   </form>
                   <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
                     <ImageUpload url={formData.img} />
@@ -131,7 +131,7 @@ const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) =>
                       Save changes
                     </button>
                     <Link
-                      to={`${process.env.PUBLIC_URL}/yourStorage`}
+                      to="/yourStorage"
                       className="w-full md:w-auto cursor-pointer text-center mb-4 md:mr-4 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-red-500 bg-white hover:border-black hover:text-black text-red-500"
                       type="button"
                     >

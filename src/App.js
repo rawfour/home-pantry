@@ -34,27 +34,16 @@ function App({ isPopUpOpen, removeProduct, closePopUp, storage, toRemove }) {
           }}
         >
           <Switch>
-            <Route
-              path={`${process.env.PUBLIC_URL}/`}
-              exact
-              render={() => <Redirect to={`${process.env.PUBLIC_URL}/yourStorage`} />}
-            />
-            <Route path={`${process.env.PUBLIC_URL}/yourStorage`} component={ProductList} />
-            <Route path={`${process.env.PUBLIC_URL}/shoppingList`} exact component={ShoppingList} />
-            <Route path={`${process.env.PUBLIC_URL}/addProduct`} exact component={AddProduct} />
-            <Route
-              path={`${process.env.PUBLIC_URL}/product/:id/edit`}
-              exact
-              component={EditProduct}
-            />
-            <Route path={`${process.env.PUBLIC_URL}/settings`} exact component={Settings} />
-            <Route path={`${process.env.PUBLIC_URL}/notFound`} exact component={NotFound} />
-            <Route path={`${process.env.PUBLIC_URL}/error`} exact component={ErrorPage} />
-            <Route
-              path="*/error"
-              render={() => <Redirect to={`${process.env.PUBLIC_URL}/error`} />}
-            />
-            <Route render={() => <Redirect to={`${process.env.PUBLIC_URL}/notFound`} />} />
+            <Route path="/" exact render={() => <Redirect to="/yourStorage" />} />
+            <Route path="/yourStorage" component={ProductList} />
+            <Route path="/shoppingList" exact component={ShoppingList} />
+            <Route path="/addProduct" exact component={AddProduct} />
+            <Route path="/product/:id/edit" exact component={EditProduct} />
+            <Route path="/settings" exact component={Settings} />
+            <Route path="/notFound" exact component={NotFound} />
+            <Route path="/error" exact component={ErrorPage} />
+            <Route path="*/error" render={() => <Redirect to="/error" />} />
+            <Route render={() => <Redirect to="/notFound" />} />
           </Switch>
         </div>
       </Router>

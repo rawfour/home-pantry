@@ -8,53 +8,15 @@ import {
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
   CHOOSE_IMAGE,
-  UPLOAD_IMAGE,
 } from 'services/actionTypes';
 import firebase, { storage } from 'firebase/index';
+import { REMOVE_IMAGE } from '../actionTypes';
 
 export const setImage = (image) => {
   return {
     type: CHOOSE_IMAGE,
     payload: { image },
   };
-};
-
-async function uploadTaskPromise(image) {
-  return new Promise((resolve, reject) => {
-    const uploadTask = storage.ref(`images/${image.name}`).put(image);
-    uploadTask.on(
-      'state_changed',
-
-      () => {
-        // progress bar here, but in future :)
-      },
-      (throwError) => {
-        console.log('error', throwError);
-        reject();
-      },
-      () => {
-        storage
-          .ref('images')
-          .child(image.name)
-          .getDownloadURL()
-          .then((destUrl) => {
-            resolve(destUrl);
-          });
-      },
-    );
-  });
-}
-
-export const setUrl = (image) => async (dispatch) => {
-  try {
-    const url = await uploadTaskPromise(image);
-    dispatch({
-      type: UPLOAD_IMAGE,
-      payload: url,
-    });
-  } catch (showError) {
-    console.log('ERR===', showError);
-  }
 };
 
 export const openPopUp = (productId) => {
@@ -120,6 +82,9 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
       type: ADD_PRODUCT,
       payload: succesMes,
     });
+    dispatch({
+      type: REMOVE_IMAGE,
+    });
     setTimeout(() => {
       dispatch({
         type: CLEAR_MESSAGE,
@@ -127,6 +92,9 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
     }, 5000);
   } catch (showError) {
     console.log('ERR===', showError);
+    dispatch({
+      type: REMOVE_IMAGE,
+    });
   }
 };
 
@@ -251,6 +219,9 @@ export const editProduct = (id, name, category, image, img, unit, currently) => 
         succesMes,
       },
     });
+    dispatch({
+      type: REMOVE_IMAGE,
+    });
     setTimeout(() => {
       dispatch({
         type: CLEAR_MESSAGE,
@@ -258,5 +229,8 @@ export const editProduct = (id, name, category, image, img, unit, currently) => 
     }, 5000);
   } catch (showError) {
     console.log('ERR===', showError);
+    dispatch({
+      type: REMOVE_IMAGE,
+    });
   }
 };

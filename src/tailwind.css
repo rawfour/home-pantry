@@ -19,7 +19,7 @@
   color: white;
 }
 
-.product_img {
+.animated-img {
   opacity: 0;
   visibility: hidden;
   animation: fadeIn 1s 0.3s forwards;

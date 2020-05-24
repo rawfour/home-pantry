@@ -28,7 +28,7 @@ const ProductList = ({ storage, fetchProducts, openPopUp }) => {
         </div>
 
         <div className="w-1/6 px-2 text-center">
-          <span className="text-gray-600">In storage</span>
+          <span className="text-gray-600">You have</span>
         </div>
 
         <div className="w-1/6 px-2 text-center">

@@ -3,12 +3,10 @@ export const EDIT_PRODUCT = 'EDIT_PRODUCT';
 export const ADD_PRODUCT = 'ADD_PRODUCT';
 export const FETCH_BEGIN = 'FETCH_BEGIN';
 export const FETCH_PRODUCTS_DONE = 'FETCH_PRODUCTS_DONE';
-export const FETCH_SINGLE_PRODUCT = 'FETCH_SINGLE_PRODUCT';
 
 export const OPEN_POPUP = 'OPEN_POPUP';
 export const CLOSE_POPUP = 'CLOSE_POPUP';
 
 export const CHOOSE_IMAGE = 'CHOOSE_IMAGE';
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
-export const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
 export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';

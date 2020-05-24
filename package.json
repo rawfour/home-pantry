@@ -14,7 +14,7 @@
     "react-dom": "^16.13.1",
     "react-file-picker": "0.0.6",
     "react-redux": "^7.2.0",
-    "react-router": "^5.1.2",
+    "react-router": "^3.2.6",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
@@ -22,7 +22,8 @@
     "styled-components": "^5.0.1",
     "tailwind-react-ui": "^0.8.1",
     "tailwind.macro": "^1.0.0-alpha.10",
-    "tailwindcss": "^1.2.0"
+    "tailwindcss": "^1.2.0",
+    "yup": "^0.29.0"
   },
   "scripts": {
     "build:css": "postcss src/tailwind.css -o src/index.css",

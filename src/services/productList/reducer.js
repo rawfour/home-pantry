@@ -8,7 +8,7 @@ import {
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
   CHOOSE_IMAGE,
-  UPLOAD_IMAGE,
+  REMOVE_IMAGE,
 } from 'services/actionTypes';
 
 const initialState = {
@@ -74,7 +74,7 @@ const productListReducer = (state = initialState, action) => {
         ...state,
         image: action.payload.image,
       };
-    case UPLOAD_IMAGE:
+    case REMOVE_IMAGE:
       return {
         ...state,
         image: null,

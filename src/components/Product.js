@@ -14,7 +14,7 @@ const Product = ({ product, openPopUp }) => {
       <div className="flex items-center pr-2 w-1/6 relative">
         {img && (
           <img
-            className="product_img rounded block"
+            className="animated-img rounded block"
             src={img}
             alt={name}
             onLoad={onImageLoaded}
@@ -25,7 +25,7 @@ const Product = ({ product, openPopUp }) => {
         )}
 
         {!loaded && (
-          <div className="flex justify-center items-center h-24 w-24 rounded bg-gray-200 absolute">
+          <div className="animated-img flex justify-center items-center h-24 w-24 rounded bg-gray-200 absolute">
             <svg xmlns="http://www.w3.org/2000/svg" width="45" height="37" viewBox="0 0 20 16">
               <path
                 id="icon-image"
@@ -57,7 +57,7 @@ const Product = ({ product, openPopUp }) => {
       </div>
       <div className="flex justify-end items-center w-1/6 pl-2">
         <Link
-          to={`${process.env.PUBLIC_URL}/product/${id}/edit`}
+          to={`/product/${id}/edit`}
           className="border-solid border-2 shadow border-green-500 bg-green-200 rounded-full p-2 mr-4 transform hover:scale-110 transition duration-100"
         >
           <svg

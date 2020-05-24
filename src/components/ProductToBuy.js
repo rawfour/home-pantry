@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 const ProductToBuy = ({ product }) => {
   const { name, img, unit, isMax, isLow, currently } = product;
+  const [loaded, setLoaded] = useState(false);
+  const onImageLoaded = () => {
+    setLoaded(true);
+  };
   return (
     <div
       className="rounded shadow bg-white overflow-hidden py-4 px-6 m-4"
@@ -11,25 +15,37 @@ const ProductToBuy = ({ product }) => {
       }}
     >
       <div
-        className="w-full rounded"
+        className="w-full rounded flex justify-center items-center"
         style={{
           height: 252,
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        <img
-          className="w-full block"
-          src={img}
-          alt={name}
-          style={{
-            position: 'absolute',
-            width: '100%',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%,-50%)',
-          }}
-        />
+        {img && (
+          <img
+            className="animated-img block"
+            src={img}
+            alt={name}
+            onLoad={onImageLoaded}
+            style={{
+              maxWidth: '100%',
+            }}
+          />
+        )}
+
+        {!loaded && (
+          <div className="animated-img flex w-full h-full justify-center items-center rounded bg-gray-200 absolute">
+            <svg xmlns="http://www.w3.org/2000/svg" width="85" height="77" viewBox="0 0 20 16">
+              <path
+                id="icon-image"
+                d="M4,4H20a2,2,0,0,1,2,2V18a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2.006,2.006,0,0,1,4,4Zm16,8.59V6H4v6.59l4.3-4.3a1,1,0,0,1,1.4,0l5.3,5.3,2.3-2.3a1,1,0,0,1,1.4,0l1.3,1.3Zm0,2.82-2-2-2.3,2.3a1,1,0,0,1-1.4,0L9,10.4l-5,5V18H20ZM15,10a1,1,0,1,1,1-1A1,1,0,0,1,15,10Z"
+                transform="translate(-2 -4)"
+                fill="#fff"
+              />
+            </svg>
+          </div>
+        )}
       </div>
       <div className="flex flex-col w-full pt-4">
         <div className="w-full pb-4 mb-4 text-center border-b-2 border-gray-400">

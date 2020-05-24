@@ -7,10 +7,7 @@ const Header = () => {
   return (
     <nav className="flex items-center justify-between flex-wrap bg-green-500 p-6">
       <div className="flex items-center flex-shrink-0 text-white mr-6">
-        <Link
-          to={`${process.env.PUBLIC_URL}/yourStorage`}
-          className="font-semibold text-2xl tracking-tight"
-        >
+        <Link to="/yourStorage" className="font-semibold text-2xl tracking-tight">
           Home pantry
         </Link>
       </div>
@@ -40,13 +37,13 @@ const Header = () => {
       >
         <div className="text-sm lg:flex-grow flex flex-col lg:flex-row">
           <NavLink
-            to={`${process.env.PUBLIC_URL}/yourStorage`}
+            to="/yourStorage"
             className="flex mt-4 lg:inline-flex lg:mt-0 duration-200 text-base text-teal-200 hover:text-white lg:mx-5"
           >
             Your products
           </NavLink>
           <NavLink
-            to={`${process.env.PUBLIC_URL}/settings`}
+            to="/settings"
             className="flex items-center mt-4 lg:inline-flex lg:mt-0 text-base duration-200 text-teal-200 hover:text-white"
           >
             <svg
@@ -66,7 +63,7 @@ const Header = () => {
         </div>
         <div>
           <Link
-            to={`${process.env.PUBLIC_URL}/addProduct`}
+            to="/addProduct"
             className="inline-flex justify-center items-center duration-200 text-base mr-4 px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
           >
             <svg
@@ -86,7 +83,7 @@ const Header = () => {
         </div>
         <div>
           <Link
-            to={`${process.env.PUBLIC_URL}/shoppingList`}
+            to="/shoppingList"
             className="inline-flex justify-center items-center duration-200 text-base px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
           >
             <svg

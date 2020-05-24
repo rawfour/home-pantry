@@ -1,11 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 import { connect } from 'react-redux';
 import { addProduct as addProductAction } from 'services/productList/actions';
 import Input from './Input';
 import Select from './Select';
 import ImageUpload from './ImageUpload';
+
+const ValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .matches(/^[a-z]+$/i, {
+      message: 'Product name should contain only letters',
+      excludeEmptyString: true,
+    })
+    .min(2, 'Too Short!')
+    .max(20, 'Too Long!')
+    .required('Required'),
+  currently: Yup.number()
+    .min(0, 'Minimum number of products can be 0')
+    .max(1000000, 'Nice try, but it`s too much')
+    .typeError('Invalid number')
+    .required('Required'),
+  isMax: Yup.number()
+    .min(Yup.ref('isLow'), 'Maximum number cannot be less than the minimum number')
+    .max(1000000, 'Nice try, but it`s too much')
+    .typeError('Invalid number')
+    .required('Required'),
+  isLow: Yup.number()
+    .min(0, 'Minimum number of products can be 0')
+    .max(Yup.ref('isMax'), 'Minimum number cannot be greater than the maximum number')
+    .typeError('Invalid number')
+    .required('Required'),
+});
 
 const AddForm = ({ image, addProduct, actionDone }) => {
   const initialValues = {
@@ -20,42 +47,14 @@ const AddForm = ({ image, addProduct, actionDone }) => {
   return (
     <Formik
       initialValues={initialValues}
-      validate={(values) => {
-        const errors = {};
-
-        if (!values.name) {
-          errors.name = 'Required';
-        } else if (!/^[a-z]+$/i.test(values.name)) {
-          errors.name = 'Invalid product name';
-        }
-
-        if (!values.isMax) {
-          errors.isMax = 'Required';
-        } else if (!/^[0-9]+$/i.test(values.isMax)) {
-          errors.isMax = 'Invalid number';
-        }
-
-        if (!values.isLow) {
-          errors.isLow = 'Required';
-        } else if (!/^[0-9]/.test(values.isLow)) {
-          errors.isLow = 'Invalid number';
-        }
-
-        if (!values.currently) {
-          errors.currently = 'Required';
-        } else if (!/^[0-9]/.test(values.currently)) {
-          errors.currently = 'Invalid number';
-        }
-
-        return errors;
-      }}
+      validationSchema={ValidationSchema}
       onSubmit={(values, { setSubmitting }) => {
         const { name, category, unit, isMax, isLow, currently } = values;
         addProduct(name, category, image, unit, isMax, isLow, currently);
         setSubmitting(false);
       }}
     >
-      {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
+      {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
         <>
           {actionDone && (
             <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-600">
@@ -79,8 +78,8 @@ const AddForm = ({ image, addProduct, actionDone }) => {
                   blur={handleBlur}
                   action={handleChange}
                   label="Product name"
+                  errorMessage="name"
                 />
-                {errors.name && touched.name && errors.name}
                 <Select
                   value={values.category}
                   name="category"
@@ -109,8 +108,8 @@ const AddForm = ({ image, addProduct, actionDone }) => {
                   blur={handleBlur}
                   action={handleChange}
                   label="Maximum number of products"
+                  errorMessage="isMax"
                 />
-                {errors.isMax && touched.isMax && errors.isMax}
                 <Input
                   value={values.isLow}
                   type="text"
@@ -118,9 +117,9 @@ const AddForm = ({ image, addProduct, actionDone }) => {
                   id="is_low"
                   blur={handleBlur}
                   action={handleChange}
-                  label="Minimal number of products"
+                  label="Minimum number of products"
+                  errorMessage="isLow"
                 />
-                {errors.isLow && touched.isLow && errors.isLow}
                 <Input
                   value={values.currently}
                   type="text"
@@ -128,9 +127,9 @@ const AddForm = ({ image, addProduct, actionDone }) => {
                   id="in_storage"
                   blur={handleBlur}
                   action={handleChange}
-                  label="Current number of products"
+                  label="Have now"
+                  errorMessage="currently"
                 />
-                {errors.currently && touched.currently && errors.currently}
               </form>
               <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
                 <ImageUpload />

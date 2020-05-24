@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ErrorMessage } from 'formik';
 
-const Input = ({ id, label, name, blur, action, value, type }) => {
+const Input = ({ id, label, name, blur, action, value, type, errorMessage }) => {
   return (
     <>
       {label && (
@@ -10,6 +11,15 @@ const Input = ({ id, label, name, blur, action, value, type }) => {
           htmlFor={id}
         >
           {label}
+
+          <ErrorMessage name={errorMessage}>
+            {(msg) => (
+              <>
+                <span> - </span>
+                <span className="text-red-400">{msg}</span>
+              </>
+            )}
+          </ErrorMessage>
         </label>
       )}
       <input
@@ -33,6 +43,7 @@ Input.propTypes = {
   action: PropTypes.func.isRequired,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   type: PropTypes.string.isRequired,
+  errorMessage: PropTypes.string.isRequired,
 };
 
 Input.defaultProps = {
