@@ -6,26 +6,13 @@ import { Link } from 'react-router-dom';
 import {
   fetchSingleProduct as fetchSingleProductAction,
   editProduct as editProductAction,
-  setImage as setImageAction,
-  removeImage as removeImageAction,
 } from 'services/productList/actions';
 import Input from './Input';
 import Select from './Select';
 import ImageUpload from './ImageUpload';
 
-const EditForm = ({
-  id,
-  image,
-  error,
-  setImage,
-  removeImage,
-  editProduct,
-  fetchSingleProduct,
-  actionDone,
-  singleProduct,
-}) => {
-  // const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState(singleProduct);
+const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) => {
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     async function getProduct() {
@@ -43,10 +30,10 @@ const EditForm = ({
           validate={(values) => {
             const errors = {};
 
-            if (!values.title) {
-              errors.title = 'Required';
-            } else if (!/^[a-z]+$/i.test(values.title)) {
-              errors.title = 'Invalid title';
+            if (!values.name) {
+              errors.name = 'Required';
+            } else if (!/^[a-z]+$/i.test(values.name)) {
+              errors.name = 'Invalid product name';
             }
 
             if (!values.currently) {
@@ -66,7 +53,7 @@ const EditForm = ({
           {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
             <>
               {actionDone && (
-                <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-40">
+                <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-600">
                   <span>{actionDone}</span>
                 </div>
               )}
@@ -77,6 +64,7 @@ const EditForm = ({
                     id="edit"
                     onSubmit={handleSubmit}
                     className="w-full md:w-1/2 md:pr-4 lg:pr-16"
+                    noValidate
                   >
                     <Input
                       value={values.name}
@@ -87,7 +75,7 @@ const EditForm = ({
                       action={handleChange}
                       label="Product name"
                     />
-                    {errors.title && touched.title && errors.title}
+                    {errors.name && touched.name && errors.name}
                     <Select
                       value={values.category}
                       name="category"
@@ -131,13 +119,7 @@ const EditForm = ({
                     {errors.currently && touched.currently && errors.currently}
                   </form>
                   <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
-                    <ImageUpload
-                      setImage={setImage}
-                      removeImage={removeImage}
-                      image={image}
-                      error={error}
-                      url={formData.img}
-                    />
+                    <ImageUpload url={formData.img} />
                   </div>
                   <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
                     <button
@@ -171,28 +153,17 @@ const EditForm = ({
 EditForm.propTypes = {
   id: PropTypes.string.isRequired,
   image: PropTypes.shape(),
-  error: PropTypes.shape({ isError: PropTypes.bool, errorMes: PropTypes.string }),
-  setImage: PropTypes.func.isRequired,
-  removeImage: PropTypes.func.isRequired,
-  singleProduct: PropTypes.shape(),
   fetchSingleProduct: PropTypes.func.isRequired,
   editProduct: PropTypes.func.isRequired,
   actionDone: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
 };
 
 EditForm.defaultProps = {
-  singleProduct: {},
   image: null,
-  error: {
-    isError: false,
-    errorMes: null,
-  },
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  setImage: (file) => dispatch(setImageAction(file)),
   fetchSingleProduct: (id) => dispatch(fetchSingleProductAction(id)),
-  removeImage: () => dispatch(removeImageAction()),
   editProduct: (id, nameValue, categoryValue, imageValue, img, unitValue, currentlyValue) =>
     dispatch(
       editProductAction(id, nameValue, categoryValue, imageValue, img, unitValue, currentlyValue),
@@ -200,8 +171,11 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
-  const { image, error, actionDone, singleProduct } = state.products;
-  return { image, error, actionDone, singleProduct };
+  const { image, actionDone } = state.products;
+  return {
+    image,
+    actionDone,
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditForm);

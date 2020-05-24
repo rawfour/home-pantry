@@ -36,5 +36,6 @@ Project uses:
 - React Router
 - Redux + Redux Thunk
 - Backend: Firebase
+- Formik
 - Tailwindcss
 - Tools: ESlint, Husky + lint-staged

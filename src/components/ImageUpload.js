@@ -1,15 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { setImage as setImageAction } from 'services/productList/actions';
+import { connect } from 'react-redux';
 
-const ImageUpload = ({ image, url, error, setImage, removeImage }) => {
+const ImageUpload = ({ url, setImage }) => {
+  const [preview, setPreview] = useState(url);
+  const [message, setMessage] = useState({
+    isMessage: false,
+    isWarning: false,
+    messageText: '',
+  });
+
   const handleImageChange = (e) => {
-    removeImage();
-    setImage(e.target.files[0]);
-  };
+    const file = e.target.files[0];
 
-  useEffect(() => {
-    removeImage();
-  }, []);
+    if (file.size > 300000) {
+      setMessage({
+        isMessage: true,
+        isWarning: true,
+        messageText: 'Size of file is too big. Files should weigh less than 300kB',
+      });
+    } else {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setMessage({
+        isMessage: true,
+        isWarning: false,
+        messageText: 'Image selected',
+      });
+      setImage(file);
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row md:flex-wrap mb-6">
@@ -19,19 +43,18 @@ const ImageUpload = ({ image, url, error, setImage, removeImage }) => {
       >
         Product image
       </label>
-      {error.isError && (
-        <span className="py-2 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-red-200 text-red-400">
-          {error.errorMes}
+      {message.isMessage && (
+        <span
+          className={`py-2 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 ${
+            message.isWarning ? 'bg-red-200 text-red-400' : 'bg-green-200 text-green-600'
+          }`}
+        >
+          {message.messageText}
         </span>
       )}
-      {image && (
-        <span className="py-2 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-40">
-          Selected
-        </span>
-      )}
-      <div className="w-full md:w-1/2">
-        {url ? (
-          <img className="shadow rounded mb-6" src={url} alt="product_image" />
+      <div className="w-full md:w-1/2 pr-6">
+        {preview ? (
+          <img className="shadow rounded mb-6" src={preview} alt="product_image" />
         ) : (
           <div className="flex justify-center items-center h-32 w-32 rounded mb-6 bg-gray-200">
             <svg xmlns="http://www.w3.org/2000/svg" width="45" height="37" viewBox="0 0 20 16">
@@ -49,6 +72,7 @@ const ImageUpload = ({ image, url, error, setImage, removeImage }) => {
         id="file"
         onChange={handleImageChange}
         type="file"
+        accept="image/*"
         style={{
           width: '0.1px',
           height: '0.1px',
@@ -66,33 +90,22 @@ const ImageUpload = ({ image, url, error, setImage, removeImage }) => {
         >
           Choose image
         </label>
-        {/* <button
-          className="text-center duration-200 text-base px-4 py-2 leading-none rounded border-solid border-2 shadow border-gray-600 bg-white hover:border-green-400 hover:text-green-400 text-gray-600"
-          onClick={handleUpload}
-          type="button"
-        >
-          Upload
-        </button> */}
       </div>
     </div>
   );
 };
 
 ImageUpload.propTypes = {
-  image: PropTypes.shape(),
   url: PropTypes.string,
-  error: PropTypes.shape({ isError: PropTypes.bool, errorMes: PropTypes.string }),
   setImage: PropTypes.func.isRequired,
-  removeImage: PropTypes.func.isRequired,
 };
 
 ImageUpload.defaultProps = {
-  image: null,
   url: null,
-  error: {
-    isError: false,
-    errorMes: null,
-  },
 };
 
-export default ImageUpload;
+const mapDispatchToProps = (dispatch) => ({
+  setImage: (image) => dispatch(setImageAction(image)),
+});
+
+export default connect(null, mapDispatchToProps)(ImageUpload);

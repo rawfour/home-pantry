@@ -2,18 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { connect } from 'react-redux';
-import {
-  setImage as setImageAction,
-  removeImage as removeImageAction,
-  addProduct as addProductAction,
-} from 'services/productList/actions';
+import { addProduct as addProductAction } from 'services/productList/actions';
 import Input from './Input';
 import Select from './Select';
 import ImageUpload from './ImageUpload';
 
-const AddForm = ({ image, url, error, setImage, removeImage, addProduct, actionDone }) => {
+const AddForm = ({ image, addProduct, actionDone }) => {
   const initialValues = {
-    title: '',
+    name: '',
     category: 'Drinks',
     unit: 'kg',
     isMax: 3,
@@ -27,10 +23,10 @@ const AddForm = ({ image, url, error, setImage, removeImage, addProduct, actionD
       validate={(values) => {
         const errors = {};
 
-        if (!values.title) {
-          errors.title = 'Required';
-        } else if (!/^[a-z]+$/i.test(values.title)) {
-          errors.title = 'Invalid title';
+        if (!values.name) {
+          errors.name = 'Required';
+        } else if (!/^[a-z]+$/i.test(values.name)) {
+          errors.name = 'Invalid product name';
         }
 
         if (!values.isMax) {
@@ -54,15 +50,15 @@ const AddForm = ({ image, url, error, setImage, removeImage, addProduct, actionD
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        const { title, category, unit, isMax, isLow, currently } = values;
-        addProduct(title, category, image, unit, isMax, isLow, currently);
+        const { name, category, unit, isMax, isLow, currently } = values;
+        addProduct(name, category, image, unit, isMax, isLow, currently);
         setSubmitting(false);
       }}
     >
       {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
         <>
           {actionDone && (
-            <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-40">
+            <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-600">
               <span>{actionDone}</span>
             </div>
           )}
@@ -70,21 +66,21 @@ const AddForm = ({ image, url, error, setImage, removeImage, addProduct, actionD
             <h2 className=" w-full pb-12 text-2xl">Add product</h2>
             <div className="flex flex-wrap">
               <form
-                id="edit"
+                id="add"
                 onSubmit={handleSubmit}
                 className="w-full md:w-1/2 md:pr-4 lg:pr-16"
                 noValidate
               >
                 <Input
-                  value={values.title}
+                  value={values.name}
                   type="text"
-                  name="title"
+                  name="name"
                   id="product_name"
                   blur={handleBlur}
                   action={handleChange}
                   label="Product name"
                 />
-                {errors.title && touched.title && errors.title}
+                {errors.name && touched.name && errors.name}
                 <Select
                   value={values.category}
                   name="category"
@@ -137,19 +133,13 @@ const AddForm = ({ image, url, error, setImage, removeImage, addProduct, actionD
                 {errors.currently && touched.currently && errors.currently}
               </form>
               <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
-                <ImageUpload
-                  setImage={setImage}
-                  removeImage={removeImage}
-                  image={image}
-                  error={error}
-                  url={url}
-                />
+                <ImageUpload />
               </div>
               <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
                 <button
                   className="w-full md:w-auto cursor-pointer text-center mb-4 md:ml-4 md:order-2 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:border-black hover:text-black text-green-500"
                   type="submit"
-                  form="edit"
+                  form="add"
                   disabled={isSubmitting}
                 >
                   Add product
@@ -165,33 +155,22 @@ const AddForm = ({ image, url, error, setImage, removeImage, addProduct, actionD
 
 AddForm.propTypes = {
   image: PropTypes.shape(),
-  url: PropTypes.string,
-  error: PropTypes.shape({ isError: PropTypes.bool, errorMes: PropTypes.string }),
-  setImage: PropTypes.func.isRequired,
-  removeImage: PropTypes.func.isRequired,
   addProduct: PropTypes.func.isRequired,
   actionDone: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
 };
 
 AddForm.defaultProps = {
   image: null,
-  url: null,
-  error: {
-    isError: false,
-    errorMes: null,
-  },
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  setImage: (file) => dispatch(setImageAction(file)),
-  removeImage: () => dispatch(removeImageAction()),
   addProduct: (name, category, image, unit, isMax, isLow, currently) =>
     dispatch(addProductAction(name, category, image, unit, isMax, isLow, currently)),
 });
 
 const mapStateToProps = (state) => {
-  const { image, url, error, actionDone } = state.products;
-  return { image, url, error, actionDone };
+  const { image, actionDone } = state.products;
+  return { image, actionDone };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddForm);

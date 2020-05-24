@@ -9,40 +9,18 @@ import {
   CLEAR_MESSAGE,
   CHOOSE_IMAGE,
   UPLOAD_IMAGE,
-  REMOVE_IMAGE,
 } from 'services/actionTypes';
 import firebase, { storage } from 'firebase/index';
 
-export const setImage = (file) => {
-  const error = {
-    isError: false,
-    errorMes: null,
-  };
-  let image = null;
-  if (!(file.type === 'image/png' || file.type === 'image/jpeg')) {
-    error.errorMes = 'Incorrect file format, use JPG or PNG instead.';
-    error.isError = true;
-  } else if (file.size > 300000) {
-    error.errorMes = 'Size of file is too big. Files should weigh less than 300kB.';
-    error.isError = true;
-  } else {
-    image = file;
-  }
-
+export const setImage = (image) => {
   return {
     type: CHOOSE_IMAGE,
-    payload: { image, error },
-  };
-};
-
-export const removeImage = () => {
-  return {
-    type: REMOVE_IMAGE,
+    payload: { image },
   };
 };
 
 async function uploadTaskPromise(image) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const uploadTask = storage.ref(`images/${image.name}`).put(image);
     uploadTask.on(
       'state_changed',
@@ -93,7 +71,7 @@ export const closePopUp = () => {
 };
 
 async function getImageTaskPromise(image) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const uploadTask = storage.ref(`images/${image.name}`).put(image);
     uploadTask.on(
       'state_changed',
@@ -137,7 +115,7 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
         currently: currently * 1,
         img: url,
       });
-    const succesMes = 'Product added.';
+    const succesMes = 'Product added';
     dispatch({
       type: ADD_PRODUCT,
       payload: succesMes,
@@ -153,7 +131,7 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
 };
 
 async function getSingleProductTaskPromise(productId) {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     firebase
       .firestore()
       .collection('products')
@@ -181,7 +159,7 @@ export const fetchSingleProduct = (productId) => async (dispatch) => {
 };
 
 async function getProductsTaskPromise() {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     firebase
       .firestore()
       .collection('products')
@@ -214,23 +192,22 @@ export const fetchProducts = () => async (dispatch) => {
 };
 
 async function removeProductsTaskPromise(productId) {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     firebase
       .firestore()
       .collection('products')
       .doc(productId)
       .delete()
-      .then(function () {
+      .then(() => {
         resolve();
       })
-      .catch(function (showError) {
+      .catch((showError) => {
         console.log('ERR===', showError);
       });
   });
 }
 
 export const removeProduct = (inStorage, productId) => async (dispatch) => {
-  // const newProductList = inStorage.filter((item) => item.id !== productId);
   await removeProductsTaskPromise(productId);
   const getProducts = await getProductsTaskPromise();
   dispatch({
@@ -240,7 +217,7 @@ export const removeProduct = (inStorage, productId) => async (dispatch) => {
 };
 
 async function updateTaskPromise(id, name, category, unit, currently, currentUrl) {
-  return new Promise(function (resolve) {
+  return new Promise((resolve) => {
     firebase
       .firestore()
       .collection('products')
@@ -267,11 +244,12 @@ export const editProduct = (id, name, category, image, img, unit, currently) => 
       currentUrl = await getImageTaskPromise(image);
     }
     await updateTaskPromise(id, name, category, unit, currently, currentUrl);
-    const getSingleProduct = await getSingleProductTaskPromise(id);
-    const succesMes = 'Changes saved.';
+    const succesMes = 'Changes saved';
     dispatch({
       type: EDIT_PRODUCT,
-      payload: { getSingleProduct, succesMes },
+      payload: {
+        succesMes,
+      },
     });
     setTimeout(() => {
       dispatch({

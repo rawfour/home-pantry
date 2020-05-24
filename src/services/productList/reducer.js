@@ -9,23 +9,16 @@ import {
   CLEAR_MESSAGE,
   CHOOSE_IMAGE,
   UPLOAD_IMAGE,
-  REMOVE_IMAGE,
 } from 'services/actionTypes';
 
 const initialState = {
   storage: [],
-  singleProduct: {},
   isPopUpOpen: false,
   toRemove: null,
   shoppingList: [],
   loading: false,
   actionDone: false,
   image: null,
-  url: null,
-  error: {
-    isError: false,
-    errorMes: null,
-  },
 };
 
 const productListReducer = (state = initialState, action) => {
@@ -57,7 +50,6 @@ const productListReducer = (state = initialState, action) => {
     case EDIT_PRODUCT:
       return {
         ...state,
-        singleProduct: { ...action.payload.getSingleProduct },
         actionDone: action.payload.succesMes,
       };
     case OPEN_POPUP:
@@ -81,23 +73,11 @@ const productListReducer = (state = initialState, action) => {
       return {
         ...state,
         image: action.payload.image,
-        error: action.payload.error,
-      };
-    case REMOVE_IMAGE:
-      return {
-        ...state,
-        error: { isError: false, errorMes: null },
-        image: null,
       };
     case UPLOAD_IMAGE:
       return {
         ...state,
         image: null,
-        error: {
-          isError: false,
-          errorMes: null,
-        },
-        url: action.payload,
       };
     default:
       return state;
