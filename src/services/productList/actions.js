@@ -4,20 +4,10 @@ import {
   OPEN_POPUP,
   CLOSE_POPUP,
   ADD_PRODUCT,
-  FETCH_BEGIN,
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
-  CHOOSE_IMAGE,
 } from 'services/actionTypes';
 import firebase, { storage } from 'firebase/index';
-import { REMOVE_IMAGE } from '../actionTypes';
-
-export const setImage = (image) => {
-  return {
-    type: CHOOSE_IMAGE,
-    payload: { image },
-  };
-};
 
 export const openPopUp = (productId) => {
   return {
@@ -82,9 +72,6 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
       type: ADD_PRODUCT,
       payload: succesMes,
     });
-    dispatch({
-      type: REMOVE_IMAGE,
-    });
     setTimeout(() => {
       dispatch({
         type: CLEAR_MESSAGE,
@@ -92,9 +79,6 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
     }, 5000);
   } catch (showError) {
     console.log('ERR===', showError);
-    dispatch({
-      type: REMOVE_IMAGE,
-    });
   }
 };
 
@@ -115,14 +99,13 @@ async function getSingleProductTaskPromise(productId) {
   });
 }
 
-export const fetchSingleProduct = (productId) => async (dispatch) => {
-  let product;
-  try {
-    dispatch({ type: FETCH_BEGIN });
-    product = await getSingleProductTaskPromise(productId);
-  } catch (showError) {
-    console.log('ERR===', showError);
-  }
+export const fetchSingleProduct = (productId) => async () => {
+  // try {
+  //   // dispatch({ type: FETCH_BEGIN });
+  const product = await getSingleProductTaskPromise(productId);
+  // } catch (showError) {
+  //   console.log('ERR===', showError);
+  // }
   return product;
 };
 
@@ -219,9 +202,6 @@ export const editProduct = (id, name, category, image, img, unit, currently) => 
         succesMes,
       },
     });
-    dispatch({
-      type: REMOVE_IMAGE,
-    });
     setTimeout(() => {
       dispatch({
         type: CLEAR_MESSAGE,
@@ -229,8 +209,5 @@ export const editProduct = (id, name, category, image, img, unit, currently) => 
     }, 5000);
   } catch (showError) {
     console.log('ERR===', showError);
-    dispatch({
-      type: REMOVE_IMAGE,
-    });
   }
 };

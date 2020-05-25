@@ -4,11 +4,8 @@ import {
   OPEN_POPUP,
   CLOSE_POPUP,
   ADD_PRODUCT,
-  FETCH_BEGIN,
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
-  CHOOSE_IMAGE,
-  REMOVE_IMAGE,
 } from 'services/actionTypes';
 
 const initialState = {
@@ -16,9 +13,7 @@ const initialState = {
   isPopUpOpen: false,
   toRemove: null,
   shoppingList: [],
-  loading: false,
   actionDone: false,
-  image: null,
 };
 
 const productListReducer = (state = initialState, action) => {
@@ -30,11 +25,6 @@ const productListReducer = (state = initialState, action) => {
         isPopUpOpen: false,
         toRemove: null,
       };
-    case FETCH_BEGIN:
-      return {
-        ...state,
-        loading: true,
-      };
     case FETCH_PRODUCTS_DONE:
       return {
         ...state,
@@ -45,7 +35,6 @@ const productListReducer = (state = initialState, action) => {
       return {
         ...state,
         actionDone: action.payload,
-        image: null,
       };
     case EDIT_PRODUCT:
       return {
@@ -68,16 +57,6 @@ const productListReducer = (state = initialState, action) => {
       return {
         ...state,
         actionDone: false,
-      };
-    case CHOOSE_IMAGE:
-      return {
-        ...state,
-        image: action.payload.image,
-      };
-    case REMOVE_IMAGE:
-      return {
-        ...state,
-        image: null,
       };
     default:
       return state;

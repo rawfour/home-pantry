@@ -1,50 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import GlobalStyle from 'theme/GlobalStyle';
-import { Router, Switch, Route, Redirect } from 'react-router-dom';
-import ProductList from 'views/ProductList';
-import ShoppingList from 'views/ShoppingList';
-import AddProduct from 'views/AddProduct';
-import EditProduct from 'views/EditProduct';
-import Settings from 'views/Settings';
-import NotFound from 'views/NotFound';
-import ErrorPage from 'views/Error';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
 import history from 'history.js';
 import Header from 'components/Header';
+import GlobalStyle from 'theme/GlobalStyle';
 import PopUp from 'components/PopUp';
 import {
   removeProduct as removeProductAction,
   closePopUp as closePopUpAction,
 } from 'services/productList/actions';
+import { routes } from './routes';
 
 function App({ isPopUpOpen, removeProduct, closePopUp, storage, toRemove }) {
   return (
     <>
-      <GlobalStyle />
       <Router history={history}>
         <Header />
-        <div
-          className="px-2 md:px-4 pt-10 pb-4 md:py-16"
-          style={{
-            maxWidth: 1500,
-            margin: '0 auto',
-            overflowX: 'scroll',
-            scrollbarWidth: 'none',
-          }}
-        >
-          <Switch>
-            <Route path="/" exact render={() => <Redirect to="/yourStorage" />} />
-            <Route path="/yourStorage" component={ProductList} />
-            <Route path="/shoppingList" exact component={ShoppingList} />
-            <Route path="/addProduct" exact component={AddProduct} />
-            <Route path="/product/:id/edit" exact component={EditProduct} />
-            <Route path="/settings" exact component={Settings} />
-            <Route path="/notFound" exact component={NotFound} />
-            <Route path="/error" exact component={ErrorPage} />
-            <Route path="*/error" render={() => <Redirect to="/error" />} />
-            <Route render={() => <Redirect to="/notFound" />} />
-          </Switch>
+        <div className="page-wrapper md:px-4 pt-10 pb-4 md:py-16">
+          <Route path="/" exact render={() => <Redirect to="/yourStorage" />} />
+          {routes.map(({ name, path, Component, isExact }) => (
+            <Route key={name} path={path} exact={isExact}>
+              {({ match }) => (
+                <CSSTransition in={match != null} timeout={1200} classNames="page" unmountOnExit>
+                  <div className="page">
+                    <Component />
+                  </div>
+                </CSSTransition>
+              )}
+            </Route>
+          ))}
         </div>
       </Router>
 
@@ -56,6 +42,7 @@ function App({ isPopUpOpen, removeProduct, closePopUp, storage, toRemove }) {
           closePopUp={closePopUp}
         />
       )}
+      <GlobalStyle />
     </>
   );
 }

@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Loader from 'react-loader-spinner';
 import {
   fetchSingleProduct as fetchSingleProductAction,
   editProduct as editProductAction,
@@ -18,8 +19,8 @@ const ValidationSchema = Yup.object().shape({
       message: 'Product name should contain only letters',
       excludeEmptyString: true,
     })
-    .min(2, 'Too Short!')
-    .max(20, 'Too Long!')
+    .min(2, 'Product name is too short')
+    .max(20, 'Product name is too long')
     .required('Required'),
   currently: Yup.number()
     .min(0, 'Minimum number of products can be 0')
@@ -28,8 +29,9 @@ const ValidationSchema = Yup.object().shape({
     .required('Required'),
 });
 
-const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) => {
+const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone }) => {
   const [formData, setFormData] = useState({});
+  const [image, setImage] = useState();
 
   useEffect(() => {
     async function getProduct() {
@@ -38,6 +40,10 @@ const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) =>
     }
     getProduct();
   }, []);
+
+  const getImageFile = (file) => {
+    setImage(file);
+  };
 
   return (
     <>
@@ -119,7 +125,7 @@ const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) =>
                     />
                   </form>
                   <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
-                    <ImageUpload url={formData.img} />
+                    <ImageUpload url={formData.img} getImageFile={getImageFile} />
                   </div>
                   <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
                     <button
@@ -144,7 +150,13 @@ const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) =>
           )}
         </Formik>
       ) : (
-        <span>loading</span>
+        <Loader
+          type="Puff"
+          color="#00BFFF"
+          height={100}
+          width={100}
+          timeout={3000} // 3 secs
+        />
       )}
     </>
   );
@@ -152,28 +164,31 @@ const EditForm = ({ id, image, editProduct, fetchSingleProduct, actionDone }) =>
 
 EditForm.propTypes = {
   id: PropTypes.string.isRequired,
-  image: PropTypes.shape(),
+  // image: PropTypes.shape(),
   fetchSingleProduct: PropTypes.func.isRequired,
   editProduct: PropTypes.func.isRequired,
   actionDone: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
 };
 
 EditForm.defaultProps = {
-  image: null,
+  // image: null,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   fetchSingleProduct: (id) => dispatch(fetchSingleProductAction(id)),
-  editProduct: (id, nameValue, categoryValue, imageValue, img, unitValue, currentlyValue) =>
+  editProduct: (id, nameValue, categoryValue, imageFile, img, unitValue, currentlyValue) =>
     dispatch(
-      editProductAction(id, nameValue, categoryValue, imageValue, img, unitValue, currentlyValue),
+      editProductAction(id, nameValue, categoryValue, imageFile, img, unitValue, currentlyValue),
     ),
 });
 
 const mapStateToProps = (state) => {
-  const { image, actionDone } = state.products;
+  const {
+    // image,
+    actionDone,
+  } = state.products;
   return {
-    image,
+    // image,
     actionDone,
   };
 };

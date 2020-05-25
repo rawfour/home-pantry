@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { setImage as setImageAction } from 'services/productList/actions';
+// import { setImage as setImageAction } from 'services/productList/actions';
 import { connect } from 'react-redux';
 
-const ImageUpload = ({ url, setImage }) => {
+const ImageUpload = ({ url, getImageFile }) => {
   const [preview, setPreview] = useState(url);
   const [message, setMessage] = useState({
     isMessage: false,
@@ -31,7 +31,8 @@ const ImageUpload = ({ url, setImage }) => {
         isWarning: false,
         messageText: 'Image selected',
       });
-      setImage(file);
+      getImageFile(file);
+      // setImage(file);
     }
   };
 
@@ -101,15 +102,16 @@ const ImageUpload = ({ url, setImage }) => {
 
 ImageUpload.propTypes = {
   url: PropTypes.string,
-  setImage: PropTypes.func.isRequired,
+  getImageFile: PropTypes.func.isRequired,
+  // setImage: PropTypes.func.isRequired,
 };
 
 ImageUpload.defaultProps = {
   url: null,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  setImage: (image) => dispatch(setImageAction(image)),
-});
+// const mapDispatchToProps = (dispatch) => ({
+//   setImage: (image) => dispatch(setImageAction(image)),
+// });
 
-export default connect(null, mapDispatchToProps)(ImageUpload);
+export default connect(null, null)(ImageUpload);

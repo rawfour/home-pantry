@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -14,8 +14,8 @@ const ValidationSchema = Yup.object().shape({
       message: 'Product name should contain only letters',
       excludeEmptyString: true,
     })
-    .min(2, 'Too Short!')
-    .max(20, 'Too Long!')
+    .min(2, 'Product name is too short')
+    .max(20, 'Product name is too long')
     .required('Required'),
   currently: Yup.number()
     .min(0, 'Minimum number of products can be 0')
@@ -34,7 +34,7 @@ const ValidationSchema = Yup.object().shape({
     .required('Required'),
 });
 
-const AddForm = ({ image, addProduct, actionDone }) => {
+const AddForm = ({ addProduct, actionDone }) => {
   const initialValues = {
     name: '',
     category: 'Drinks',
@@ -42,6 +42,11 @@ const AddForm = ({ image, addProduct, actionDone }) => {
     isMax: 3,
     isLow: 1,
     currently: 2,
+  };
+  const [image, setImage] = useState();
+
+  const getImageFile = (file) => {
+    setImage(file);
   };
 
   return (
@@ -132,7 +137,7 @@ const AddForm = ({ image, addProduct, actionDone }) => {
                 />
               </form>
               <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
-                <ImageUpload />
+                <ImageUpload getImageFile={getImageFile} />
               </div>
               <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
                 <button
@@ -153,13 +158,13 @@ const AddForm = ({ image, addProduct, actionDone }) => {
 };
 
 AddForm.propTypes = {
-  image: PropTypes.shape(),
+  // image: PropTypes.shape(),
   addProduct: PropTypes.func.isRequired,
   actionDone: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
 };
 
 AddForm.defaultProps = {
-  image: null,
+  // image: null,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -168,8 +173,14 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
-  const { image, actionDone } = state.products;
-  return { image, actionDone };
+  const {
+    // image,
+    actionDone,
+  } = state.products;
+  return {
+    // image,
+    actionDone,
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddForm);
