@@ -100,6 +100,20 @@ const Header = () => {
             </svg>
             Shopping List
           </Link>
+
+          <Link
+            to="/login"
+            className="inline-flex justify-center items-center duration-200 text-base px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+          >
+            Sign in
+          </Link>
+
+          <Link
+            to="/register"
+            className="inline-flex justify-center items-center duration-200 text-base px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+          >
+            Sign up
+          </Link>
         </div>
       </div>
     </nav>

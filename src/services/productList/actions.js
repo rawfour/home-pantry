@@ -7,7 +7,7 @@ import {
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
 } from 'services/actionTypes';
-import firebase, { storage } from 'firebase/index';
+import { storage, firestore } from '../../firebase/index';
 
 export const openPopUp = (productId) => {
   return {
@@ -55,18 +55,15 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
     if (image) {
       url = await getImageTaskPromise(image);
     }
-    firebase
-      .firestore()
-      .collection('products')
-      .add({
-        name,
-        category,
-        unit,
-        isMax: isMax * 1,
-        isLow: isLow * 1,
-        currently: currently * 1,
-        img: url,
-      });
+    firestore.collection('products').add({
+      name,
+      category,
+      unit,
+      isMax: isMax * 1,
+      isLow: isLow * 1,
+      currently: currently * 1,
+      img: url,
+    });
     const succesMes = 'Product added';
     dispatch({
       type: ADD_PRODUCT,
@@ -84,18 +81,15 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
 
 async function getSingleProductTaskPromise(productId) {
   return new Promise((resolve) => {
-    firebase
-      .firestore()
-      .collection('products')
-      .onSnapshot((snapshot) => {
-        const currentProduct = snapshot.docs
-          .map((item) => ({
-            id: item.id,
-            ...item.data(),
-          }))
-          .filter((item) => item.id === productId);
-        resolve(...currentProduct);
-      });
+    firestore.collection('products').onSnapshot((snapshot) => {
+      const currentProduct = snapshot.docs
+        .map((item) => ({
+          id: item.id,
+          ...item.data(),
+        }))
+        .filter((item) => item.id === productId);
+      resolve(...currentProduct);
+    });
   });
 }
 
@@ -111,16 +105,13 @@ export const fetchSingleProduct = (productId) => async () => {
 
 async function getProductsTaskPromise() {
   return new Promise((resolve) => {
-    firebase
-      .firestore()
-      .collection('products')
-      .onSnapshot((snapshot) => {
-        const newProductList = snapshot.docs.map((item) => ({
-          id: item.id,
-          ...item.data(),
-        }));
-        resolve(newProductList);
-      });
+    firestore.collection('products').onSnapshot((snapshot) => {
+      const newProductList = snapshot.docs.map((item) => ({
+        id: item.id,
+        ...item.data(),
+      }));
+      resolve(newProductList);
+    });
   });
 }
 
@@ -144,8 +135,7 @@ export const fetchProducts = () => async (dispatch) => {
 
 async function removeProductsTaskPromise(productId) {
   return new Promise((resolve) => {
-    firebase
-      .firestore()
+    firestore
       .collection('products')
       .doc(productId)
       .delete()
@@ -169,8 +159,7 @@ export const removeProduct = (inStorage, productId) => async (dispatch) => {
 
 async function updateTaskPromise(id, name, category, unit, currently, currentUrl) {
   return new Promise((resolve) => {
-    firebase
-      .firestore()
+    firestore
       .collection('products')
       .doc(id)
       .update({

@@ -1,3 +1,5 @@
+import SignIn from 'views/Login';
+import Register from 'views/Register';
 import ProductList from 'views/ProductList';
 import ShoppingList from 'views/ShoppingList';
 import AddProduct from 'views/AddProduct';
@@ -6,6 +8,18 @@ import Settings from 'views/Settings';
 import NotFound from 'views/NotFound';
 
 export const routes = [
+  {
+    name: 'login',
+    path: '/login',
+    Component: SignIn,
+    isExact: true,
+  },
+  {
+    name: 'register',
+    path: '/register',
+    Component: Register,
+    isExact: true,
+  },
   {
     name: 'home',
     path: '/yourStorage',
