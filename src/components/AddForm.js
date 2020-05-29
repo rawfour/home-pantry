@@ -92,7 +92,15 @@ const AddForm = ({ addProduct, actionDone }) => {
                   blur={handleBlur}
                   action={handleChange}
                   label="Category"
-                  options={['Drinks', 'Bread', 'Vegetables / Fruits', 'Meat', 'Dairy']}
+                  options={[
+                    'Drinks',
+                    'Bread',
+                    'Vegetables / Fruits',
+                    'Meat',
+                    'Dairy',
+                    'Snacks',
+                    'Uncategorized',
+                  ]}
                 />
 
                 <Select

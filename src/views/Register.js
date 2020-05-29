@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { connect } from 'react-redux';
 import Input from '../components/Input';
-import { register } from '../firebase/index';
+import { register, addPantry } from '../firebase/index';
+import { firebaseInitialized as firebaseInitializedAction } from '../services/authentication/actions';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -25,7 +27,7 @@ const ValidationSchema = Yup.object().shape({
     .required('Required'),
 });
 
-const Register = ({ history }) => {
+const Register = ({ history, firebaseInitialized }) => {
   const initialValues = {
     name: '',
     email: '',
@@ -35,6 +37,8 @@ const Register = ({ history }) => {
   async function onRegister(name, email, password) {
     try {
       await register(name, email, password);
+      await addPantry();
+      await firebaseInitialized();
       history.replace('/yourStorage');
     } catch (error) {
       alert(error.message);
@@ -118,6 +122,11 @@ const Register = ({ history }) => {
 
 Register.propTypes = {
   history: PropTypes.shape().isRequired,
+  firebaseInitialized: PropTypes.func.isRequired,
 };
 
-export default withRouter(Register);
+const mapDispatchToProps = (dispatch) => ({
+  firebaseInitialized: (value) => dispatch(firebaseInitializedAction(value)),
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(Register));

@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ProductToBuy from 'components/ProductToBuy';
-import { fetchProducts as fetchProductsAction } from 'services/productList/actions';
+import { getShoppingList as getShoppingListAction } from 'services/productList/actions';
 
-const ShoppingList = ({ fetchProducts, shoppingList }) => {
+const ShoppingList = ({ getShoppingList, shoppingList }) => {
   useEffect(() => {
-    fetchProducts();
+    getShoppingList();
   }, []);
 
   return (
@@ -34,7 +34,7 @@ const ShoppingList = ({ fetchProducts, shoppingList }) => {
 };
 
 ShoppingList.propTypes = {
-  fetchProducts: PropTypes.func.isRequired,
+  getShoppingList: PropTypes.func.isRequired,
   shoppingList: PropTypes.arrayOf(PropTypes.object),
 };
 
@@ -48,7 +48,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchProducts: () => dispatch(fetchProductsAction()),
+  getShoppingList: () => dispatch(getShoppingListAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShoppingList);

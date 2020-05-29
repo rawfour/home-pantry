@@ -2,6 +2,11 @@
 
 https://react-home-pantry-203f8.web.app
 
+#### Test account:
+
+login: demo@gmail.com<br>
+password: demo123
+
 <img src="src/assets/screenshots/screenshot.PNG">
 
 ## Table of contents

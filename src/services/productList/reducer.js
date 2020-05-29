@@ -1,6 +1,7 @@
 import {
   REMOVE_PRODUCT,
-  FETCH_PRODUCTS_DONE,
+  FETCH_PRODUCTS,
+  MAKE_PRODUCT_LIST,
   OPEN_POPUP,
   CLOSE_POPUP,
   ADD_PRODUCT,
@@ -21,15 +22,19 @@ const productListReducer = (state = initialState, action) => {
     case REMOVE_PRODUCT:
       return {
         ...state,
-        storage: action.payload,
+        // storage: action.payload,
         isPopUpOpen: false,
         toRemove: null,
       };
-    case FETCH_PRODUCTS_DONE:
+    case FETCH_PRODUCTS:
       return {
         ...state,
-        storage: action.payload.getProducts,
-        shoppingList: action.payload.makeShoppingList,
+        storage: action.payload,
+      };
+    case MAKE_PRODUCT_LIST:
+      return {
+        ...state,
+        shoppingList: action.payload,
       };
     case ADD_PRODUCT:
       return {

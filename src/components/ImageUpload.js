@@ -55,7 +55,12 @@ const ImageUpload = ({ url, getImageFile }) => {
       )}
       <div className="w-full md:w-1/2 pr-6">
         {preview && (
-          <img className="animated-img shadow rounded mb-6" src={preview} alt="product_image" />
+          <img
+            className="animated-img shadow rounded mb-6"
+            style={{ maxHeight: '300px' }}
+            src={preview}
+            alt="product_image"
+          />
         )}
         {!preview && (
           <label

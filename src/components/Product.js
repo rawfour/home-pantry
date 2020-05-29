@@ -11,7 +11,7 @@ const Product = ({ product, openPopUp }) => {
   };
   return (
     <li className="flex mb-4 py-5 px-12 bg-white h-32 rounded">
-      <div className="flex items-center pr-2 w-1/6 relative">
+      <div className="flex justify-center items-center pr-2 w-1/6 relative">
         {img && (
           <img
             className="animated-img rounded block"

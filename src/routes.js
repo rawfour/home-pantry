@@ -6,54 +6,70 @@ import AddProduct from 'views/AddProduct';
 import EditProduct from 'views/EditProduct';
 import Settings from 'views/Settings';
 import NotFound from 'views/NotFound';
+import HomePage from 'views/HomePage';
 
 export const routes = [
+  {
+    name: 'home',
+    path: '/',
+    Component: HomePage,
+    isExact: true,
+    needAuth: false,
+  },
   {
     name: 'login',
     path: '/login',
     Component: SignIn,
     isExact: true,
+    needAuth: false,
   },
   {
     name: 'register',
     path: '/register',
     Component: Register,
     isExact: true,
+    needAuth: false,
   },
   {
-    name: 'home',
+    name: 'storage',
     path: '/yourStorage',
     Component: ProductList,
     isExact: false,
+    needAuth: true,
   },
   {
     name: 'shoppingList',
     path: '/shoppingList',
     Component: ShoppingList,
     isExact: true,
+    needAuth: true,
   },
   {
     name: 'add',
     path: '/addProduct',
     Component: AddProduct,
     isExact: true,
+    needAuth: true,
   },
   {
     name: 'edit',
     path: '/product/:id/edit',
     Component: EditProduct,
     isExact: true,
+    needAuth: true,
   },
   {
     name: 'settings',
     path: '/settings',
     Component: Settings,
     isExact: true,
+    needAuth: true,
   },
   {
     name: '404',
     path: '/notFound',
     Component: NotFound,
     isExact: false,
+    needAuth: false,
   },
 ];

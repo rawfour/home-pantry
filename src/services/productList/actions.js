@@ -1,13 +1,21 @@
 import {
   REMOVE_PRODUCT,
-  FETCH_PRODUCTS_DONE,
+  FETCH_PRODUCTS,
+  MAKE_PRODUCT_LIST,
   OPEN_POPUP,
   CLOSE_POPUP,
   ADD_PRODUCT,
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
 } from 'services/actionTypes';
-import { storage, firestore } from '../../firebase/index';
+import {
+  getCurrentUserPantry,
+  uploadImage,
+  getImageURL,
+  addProductToPantry,
+  removeProductsFromPantry,
+  editProductInPantry,
+} from '../../firebase/index';
 
 export const openPopUp = (productId) => {
   return {
@@ -22,48 +30,16 @@ export const closePopUp = () => {
   };
 };
 
-async function getImageTaskPromise(image) {
-  return new Promise((resolve, reject) => {
-    const uploadTask = storage.ref(`images/${image.name}`).put(image);
-    uploadTask.on(
-      'state_changed',
-      () => {
-        // progress bar here, but in future :)
-      },
-      (throwError) => {
-        console.log('error', throwError);
-        reject();
-      },
-      () => {
-        storage
-          .ref('images')
-          .child(image.name)
-          .getDownloadURL()
-          .then((destUrl) => {
-            resolve(destUrl);
-          });
-      },
-    );
-  });
-}
-
 export const addProduct = (name, category, image, unit, isMax, isLow, currently) => async (
   dispatch,
 ) => {
   try {
-    let url = null;
+    let imageURL = null;
     if (image) {
-      url = await getImageTaskPromise(image);
+      await uploadImage(image);
+      imageURL = await getImageURL(image.name);
     }
-    firestore.collection('products').add({
-      name,
-      category,
-      unit,
-      isMax: isMax * 1,
-      isLow: isLow * 1,
-      currently: currently * 1,
-      img: url,
-    });
+    await addProductToPantry(name, category, imageURL, unit, isMax, isLow, currently);
     const succesMes = 'Product added';
     dispatch({
       type: ADD_PRODUCT,
@@ -74,117 +50,56 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
         type: CLEAR_MESSAGE,
       });
     }, 5000);
-  } catch (showError) {
-    console.log('ERR===', showError);
+  } catch (error) {
+    alert(error.message);
   }
 };
 
-async function getSingleProductTaskPromise(productId) {
-  return new Promise((resolve) => {
-    firestore.collection('products').onSnapshot((snapshot) => {
-      const currentProduct = snapshot.docs
-        .map((item) => ({
-          id: item.id,
-          ...item.data(),
-        }))
-        .filter((item) => item.id === productId);
-      resolve(...currentProduct);
-    });
-  });
-}
-
 export const fetchSingleProduct = (productId) => async () => {
-  // try {
-  //   // dispatch({ type: FETCH_BEGIN });
-  const product = await getSingleProductTaskPromise(productId);
-  // } catch (showError) {
-  //   console.log('ERR===', showError);
-  // }
+  const userPantry = await getCurrentUserPantry();
+  const product = userPantry.find((item) => item.id === productId);
   return product;
 };
 
-async function getProductsTaskPromise() {
-  return new Promise((resolve) => {
-    firestore.collection('products').onSnapshot((snapshot) => {
-      const newProductList = snapshot.docs.map((item) => ({
-        id: item.id,
-        ...item.data(),
-      }));
-      resolve(newProductList);
-    });
-  });
-}
-
-const getShoppingList = (products) => {
-  const shoppingList = products.filter((item) => item.currently <= item.isLow);
-  return shoppingList;
-};
-
 export const fetchProducts = () => async (dispatch) => {
-  try {
-    const getProducts = await getProductsTaskPromise();
-    const makeShoppingList = await getShoppingList(getProducts);
-    dispatch({
-      type: FETCH_PRODUCTS_DONE,
-      payload: { getProducts, makeShoppingList },
-    });
-  } catch (showError) {
-    console.log('ERR===', showError);
-  }
+  const userPantry = await getCurrentUserPantry();
+  dispatch({
+    type: FETCH_PRODUCTS,
+    payload: userPantry,
+  });
 };
 
-async function removeProductsTaskPromise(productId) {
-  return new Promise((resolve) => {
-    firestore
-      .collection('products')
-      .doc(productId)
-      .delete()
-      .then(() => {
-        resolve();
-      })
-      .catch((showError) => {
-        console.log('ERR===', showError);
-      });
-  });
-}
+export const getShoppingList = () => async (dispatch, getState) => {
+  let { storage } = getState().products;
 
-export const removeProduct = (inStorage, productId) => async (dispatch) => {
-  await removeProductsTaskPromise(productId);
-  const getProducts = await getProductsTaskPromise();
+  if (storage.length === 0 || !storage) {
+    storage = await getCurrentUserPantry();
+  }
+
+  const shoppingList = storage.filter((item) => item.currently <= item.isLow);
+  dispatch({
+    type: MAKE_PRODUCT_LIST,
+    payload: shoppingList,
+  });
+};
+
+export const removeProduct = (productId) => async (dispatch) => {
+  await removeProductsFromPantry(productId);
   dispatch({
     type: REMOVE_PRODUCT,
-    payload: getProducts,
   });
 };
-
-async function updateTaskPromise(id, name, category, unit, currently, currentUrl) {
-  return new Promise((resolve) => {
-    firestore
-      .collection('products')
-      .doc(id)
-      .update({
-        name,
-        category,
-        unit,
-        currently: currently * 1,
-        img: currentUrl,
-      })
-      .then(() => {
-        resolve();
-      });
-  });
-}
 
 export const editProduct = (id, name, category, image, img, unit, currently) => async (
   dispatch,
 ) => {
   try {
-    let currentUrl = img;
+    let imageURL = img;
     if (image) {
-      currentUrl = await getImageTaskPromise(image);
+      imageURL = await getImageURL(image);
     }
-    await updateTaskPromise(id, name, category, unit, currently, currentUrl);
-    const succesMes = 'Changes saved';
+    await editProductInPantry(id, name, category, unit, currently, imageURL);
+    const succesMes = 'Product edited';
     dispatch({
       type: EDIT_PRODUCT,
       payload: {
@@ -195,8 +110,8 @@ export const editProduct = (id, name, category, image, img, unit, currently) => 
       dispatch({
         type: CLEAR_MESSAGE,
       });
-    }, 5000);
-  } catch (showError) {
-    console.log('ERR===', showError);
+    }, 4000);
+  } catch (error) {
+    alert(error.message);
   }
 };

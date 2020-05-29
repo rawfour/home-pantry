@@ -29,7 +29,7 @@ const ProductToBuy = ({ product }) => {
             alt={name}
             onLoad={onImageLoaded}
             style={{
-              maxWidth: '100%',
+              maxHeight: '100%',
             }}
           />
         )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const PopUp = ({ removeProduct, closePopUp, storage, productId }) => {
+const PopUp = ({ removeProduct, closePopUp, productID }) => {
   return (
     <div
       style={{
@@ -34,7 +34,7 @@ const PopUp = ({ removeProduct, closePopUp, storage, productId }) => {
             Cancel
           </button>
           <button
-            onClick={() => removeProduct(storage, productId)}
+            onClick={() => removeProduct(productID)}
             type="button"
             className="duration-200 text-base mx-5 px-4 py-2 leading-none rounded border-solid border-2 shadow border-red-500 bg-white hover:bg-red-200 text-red-500"
           >
@@ -49,10 +49,7 @@ const PopUp = ({ removeProduct, closePopUp, storage, productId }) => {
 PopUp.propTypes = {
   removeProduct: PropTypes.func.isRequired,
   closePopUp: PropTypes.func.isRequired,
-  productId: PropTypes.string.isRequired,
-  storage: PropTypes.arrayOf(PropTypes.object).isRequired,
+  productID: PropTypes.string.isRequired,
 };
 
 export default PopUp;
-
-// border-solid border-2 shadow border-red-500 bg-red-300 rounded-full p-2 transform hover:scale-110 transition duration-100
