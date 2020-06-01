@@ -122,6 +122,8 @@ const AddForm = ({ addProduct, actionDone }) => {
                   action={handleChange}
                   label="Maximum number of products"
                   errorMessage="isMax"
+                  tooltip
+                  tooltipText="The minimum amount of this product after reaching which the product will automatically go to the shopping list."
                 />
                 <Input
                   value={values.isLow}
@@ -132,6 +134,8 @@ const AddForm = ({ addProduct, actionDone }) => {
                   action={handleChange}
                   label="Minimum number of products"
                   errorMessage="isLow"
+                  tooltip
+                  tooltipText="The maximum amount of this product you can own."
                 />
                 <Input
                   value={values.currently}
@@ -142,6 +146,8 @@ const AddForm = ({ addProduct, actionDone }) => {
                   action={handleChange}
                   label="Have now"
                   errorMessage="currently"
+                  tooltip
+                  tooltipText="The current amount of this product you have right now."
                 />
               </form>
               <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">

@@ -44,7 +44,13 @@ export const isInitialized = () => {
 };
 
 export const getCurrentUsername = () => {
-  return auth.currentUser && auth.currentUser.displayName;
+  let user = auth.currentUser;
+
+  if (user) {
+    user = user.displayName;
+  }
+
+  return user;
 };
 
 export const getCurrentUserPantry = async () => {

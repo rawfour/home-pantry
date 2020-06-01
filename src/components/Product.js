@@ -9,6 +9,7 @@ const Product = ({ product, openPopUp }) => {
   const onImageLoaded = () => {
     setLoaded(true);
   };
+
   return (
     <li className="flex mb-4 py-5 px-12 bg-white h-32 rounded">
       <div className="flex justify-center items-center pr-2 w-1/6 relative">

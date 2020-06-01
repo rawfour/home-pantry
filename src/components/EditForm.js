@@ -4,7 +4,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Loader from 'react-loader-spinner';
 import {
   fetchSingleProduct as fetchSingleProductAction,
   editProduct as editProductAction,
@@ -47,7 +46,7 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone }) => {
 
   return (
     <>
-      {formData.name ? (
+      {formData.name && (
         <Formik
           initialValues={formData}
           validationSchema={ValidationSchema}
@@ -130,6 +129,8 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone }) => {
                       action={handleChange}
                       label="Have now"
                       errorMessage="currently"
+                      tooltip
+                      tooltipText="The current amount of this product you have right now."
                     />
                   </form>
                   <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
@@ -157,14 +158,6 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone }) => {
             </>
           )}
         </Formik>
-      ) : (
-        <Loader
-          type="Puff"
-          color="#00BFFF"
-          height={100}
-          width={100}
-          timeout={3000} // 3 secs
-        />
       )}
     </>
   );
@@ -172,14 +165,9 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone }) => {
 
 EditForm.propTypes = {
   id: PropTypes.string.isRequired,
-  // image: PropTypes.shape(),
   fetchSingleProduct: PropTypes.func.isRequired,
   editProduct: PropTypes.func.isRequired,
   actionDone: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-};
-
-EditForm.defaultProps = {
-  // image: null,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -191,12 +179,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
-  const {
-    // image,
-    actionDone,
-  } = state.products;
+  const { actionDone } = state.products;
   return {
-    // image,
     actionDone,
   };
 };

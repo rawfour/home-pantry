@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { getCurrentUsername } from '../firebase/index';
 
 const HomePage = ({ isAuth }) => {
+  const [userName, setUserName] = useState(false);
+
+  useEffect(() => {
+    const currentUserName = getCurrentUsername();
+    setUserName(currentUserName);
+  }, []);
+
   return (
     <div className="mb-4 py-12 px-8 md:px-12 bg-white rounded">
-      <h2 className=" w-full text-center pb-12 text-2xl">Welcome in your home pantry!</h2>
+      <h2 className=" w-full text-center pb-12 text-2xl">
+        Welcome in your home pantry {userName || 'guest'}!
+      </h2>
       <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
         {isAuth ? (
           <Link

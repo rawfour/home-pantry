@@ -13,6 +13,7 @@ import {
 } from 'services/productList/actions';
 import { routes } from './routes';
 import { firebaseInitialized as firebaseInitializedAction } from './services/authentication/actions';
+import Loading from './components/Loader';
 
 const App = ({ isPopUpOpen, removeProduct, closePopUp, toRemove, firebaseInitialized, isAuth }) => {
   useEffect(() => {
@@ -31,7 +32,7 @@ const App = ({ isPopUpOpen, removeProduct, closePopUp, toRemove, firebaseInitial
                 path={path}
                 render={() =>
                   isAuth ? (
-                    <div className="page">
+                    <div className="page pb-16">
                       <Component />
                     </div>
                   ) : (
@@ -53,22 +54,31 @@ const App = ({ isPopUpOpen, removeProduct, closePopUp, toRemove, firebaseInitial
     </TransitionGroup>
   ));
 
-  return isAuth !== false ? (
+  return (
     <>
-      <Router history={history}>
-        <Header />
-        <div className="page-wrapper md:px-4 py-16">
-          <AnimatedSwitch />
-        </div>
-      </Router>
+      {isAuth !== false ? (
+        <>
+          <Router history={history}>
+            <Header />
+            <div className="page-wrapper md:px-4 py-16">
+              <AnimatedSwitch />
+            </div>
+          </Router>
 
-      {isPopUpOpen && (
-        <PopUp removeProduct={removeProduct} productID={toRemove} closePopUp={closePopUp} />
+          {isPopUpOpen && (
+            <PopUp removeProduct={removeProduct} productID={toRemove} closePopUp={closePopUp} />
+          )}
+        </>
+      ) : (
+        <Loading />
       )}
       <GlobalStyle />
     </>
-  ) : (
-    <h1>Loading</h1>
+
+    // <>
+    //   <Loading />
+    //   <GlobalStyle />
+    // </>
   );
 };
 

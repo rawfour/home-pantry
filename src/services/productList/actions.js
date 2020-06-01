@@ -55,6 +55,14 @@ export const addProduct = (name, category, image, unit, isMax, isLow, currently)
   }
 };
 
+export const sortProducts = (products) => {
+  const sortedList = products.sort(
+    (a, b) => (a.currently / a.isMax) * 100 - (b.currently / b.isMax) * 100,
+  );
+
+  return sortedList;
+};
+
 export const fetchSingleProduct = (productId) => async () => {
   const userPantry = await getCurrentUserPantry();
   const product = userPantry.find((item) => item.id === productId);
@@ -63,9 +71,11 @@ export const fetchSingleProduct = (productId) => async () => {
 
 export const fetchProducts = () => async (dispatch) => {
   const userPantry = await getCurrentUserPantry();
+  const sortedPantry = sortProducts(userPantry);
+
   dispatch({
     type: FETCH_PRODUCTS,
-    payload: userPantry,
+    payload: sortedPantry,
   });
 };
 
