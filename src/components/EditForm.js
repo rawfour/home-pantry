@@ -11,6 +11,7 @@ import {
 import Input from './Input';
 import Select from './Select';
 import ImageUpload from './ImageUpload';
+import Loading from "./Loader";
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -28,7 +29,7 @@ const ValidationSchema = Yup.object().shape({
     .required('Required'),
 });
 
-const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone }) => {
+const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone, loading }) => {
   const [formData, setFormData] = useState({});
   const [image, setImage] = useState();
 
@@ -65,95 +66,101 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone }) => {
               )}
               <div className="mb-4 py-12 px-8 md:px-12 bg-white rounded">
                 <h2 className=" w-full pb-12 text-2xl">Product edit</h2>
-                <div className="flex flex-wrap">
-                  <form
-                    id="edit"
-                    onSubmit={handleSubmit}
-                    className="w-full md:w-1/2 md:pr-4 lg:pr-16"
-                    noValidate
-                  >
-                    <Input
-                      value={values.name}
-                      type="text"
-                      name="name"
-                      id="product_name"
-                      blur={handleBlur}
-                      action={handleChange}
-                      label="Product name"
-                      errorMessage="name"
-                    />
-                    <Select
-                      value={values.category}
-                      name="category"
-                      id="category"
-                      blur={handleBlur}
-                      action={handleChange}
-                      label="Category"
-                      options={[
-                        'Drinks',
-                        'Bread',
-                        'Vegetables / Fruits',
-                        'Meat',
-                        'Dairy',
-                        'Snacks',
-                        'Uncategorized',
-                      ]}
-                    />
+                {loading.fetchSingle ? (
+                  <Loading />
+                ) : (
+                  <>
+                    <div className="flex flex-wrap">
+                      <form
+                        id="edit"
+                        onSubmit={handleSubmit}
+                        className="w-full md:w-1/2 md:pr-4 lg:pr-16"
+                        noValidate
+                      >
+                        <Input
+                          value={values.name}
+                          type="text"
+                          name="name"
+                          id="product_name"
+                          blur={handleBlur}
+                          action={handleChange}
+                          label="Product name"
+                          errorMessage="name"
+                        />
+                        <Select
+                          value={values.category}
+                          name="category"
+                          id="category"
+                          blur={handleBlur}
+                          action={handleChange}
+                          label="Category"
+                          options={[
+                            'Drinks',
+                            'Bread',
+                            'Vegetables / Fruits',
+                            'Meat',
+                            'Dairy',
+                            'Snacks',
+                            'Uncategorized',
+                          ]}
+                        />
 
-                    <Select
-                      value={values.unit}
-                      name="unit"
-                      id="unit"
-                      blur={handleBlur}
-                      action={handleChange}
-                      label="Unit"
-                      options={[
-                        'kg',
-                        'g',
-                        'l',
-                        'ml',
-                        'packets',
-                        'boxs',
-                        'pieces',
-                        'bottles',
-                        'cans',
-                      ]}
-                    />
+                        <Select
+                          value={values.unit}
+                          name="unit"
+                          id="unit"
+                          blur={handleBlur}
+                          action={handleChange}
+                          label="Unit"
+                          options={[
+                            'kg',
+                            'g',
+                            'l',
+                            'ml',
+                            'packets',
+                            'boxs',
+                            'pieces',
+                            'bottles',
+                            'cans',
+                          ]}
+                        />
 
-                    <Input
-                      value={values.currently}
-                      type="text"
-                      name="currently"
-                      id="in_storage"
-                      blur={handleBlur}
-                      action={handleChange}
-                      label="Have now"
-                      errorMessage="currently"
-                      tooltip
-                      tooltipText="The current amount of this product you have right now."
-                    />
-                  </form>
-                  <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
-                    <ImageUpload url={formData.img} getImageFile={getImageFile} />
-                  </div>
-                  <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
-                    <button
-                      className="w-full md:w-auto cursor-pointer text-center mb-4 md:ml-4 md:order-2 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:border-black hover:text-black text-green-500"
-                      type="submit"
-                      form="edit"
-                      disabled={isSubmitting}
-                    >
-                      Save changes
-                    </button>
-                    <Link
-                      to="/yourStorage"
-                      className="w-full md:w-auto cursor-pointer text-center mb-4 md:mr-4 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-red-500 bg-white hover:border-black hover:text-black text-red-500"
-                      type="button"
-                    >
-                      Back
-                    </Link>
-                  </div>
-                </div>
+                        <Input
+                          value={values.currently}
+                          type="text"
+                          name="currently"
+                          id="in_storage"
+                          blur={handleBlur}
+                          action={handleChange}
+                          label="Have now"
+                          errorMessage="currently"
+                          tooltip
+                          tooltipText="The current amount of this product you have right now."
+                        />
+                      </form>
+                      <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
+                        <ImageUpload url={formData.img} getImageFile={getImageFile} />
+                      </div>
+                      <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
+                        <button
+                          className="w-full md:w-auto cursor-pointer text-center mb-4 md:ml-4 md:order-2 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:border-black hover:text-black text-green-500"
+                          type="submit"
+                          form="edit"
+                          disabled={isSubmitting}
+                        >
+                          Save changes
+                        </button>
+                        <Link
+                          to="/yourStorage"
+                          className="w-full md:w-auto cursor-pointer text-center mb-4 md:mr-4 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-red-500 bg-white hover:border-black hover:text-black text-red-500"
+                          type="button"
+                        >
+                          Back
+                        </Link>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </>
           )}
@@ -168,6 +175,7 @@ EditForm.propTypes = {
   fetchSingleProduct: PropTypes.func.isRequired,
   editProduct: PropTypes.func.isRequired,
   actionDone: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
+  loading: PropTypes.shape().isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -179,9 +187,11 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
+  const { loading } = state.loading;
   const { actionDone } = state.products;
   return {
     actionDone,
+    loading,
   };
 };
 

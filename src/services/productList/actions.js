@@ -7,6 +7,8 @@ import {
   ADD_PRODUCT,
   EDIT_PRODUCT,
   CLEAR_MESSAGE,
+  SET_LOADING,
+  REMOVE_LOADING,
 } from 'services/actionTypes';
 import {
   getCurrentUserPantry,
@@ -63,13 +65,25 @@ export const sortProducts = (products) => {
   return sortedList;
 };
 
-export const fetchSingleProduct = (productId) => async () => {
+export const fetchSingleProduct = (productId) => async (dispatch) => {
+  dispatch({
+    type: SET_LOADING,
+    payload: 'fetchSingle',
+  });
   const userPantry = await getCurrentUserPantry();
   const product = userPantry.find((item) => item.id === productId);
+  dispatch({
+    type: REMOVE_LOADING,
+    payload: 'fetchSingle',
+  });
   return product;
 };
 
 export const fetchProducts = () => async (dispatch) => {
+  dispatch({
+    type: SET_LOADING,
+    payload: 'fetchList',
+  });
   const userPantry = await getCurrentUserPantry();
   const sortedPantry = sortProducts(userPantry);
 
@@ -77,9 +91,17 @@ export const fetchProducts = () => async (dispatch) => {
     type: FETCH_PRODUCTS,
     payload: sortedPantry,
   });
+  dispatch({
+    type: REMOVE_LOADING,
+    payload: 'fetchList',
+  });
 };
 
 export const getShoppingList = () => async (dispatch, getState) => {
+  dispatch({
+    type: SET_LOADING,
+    payload: 'shoppingList',
+  });
   let { storage } = getState().products;
 
   if (storage.length === 0 || !storage) {
@@ -90,6 +112,10 @@ export const getShoppingList = () => async (dispatch, getState) => {
   dispatch({
     type: MAKE_PRODUCT_LIST,
     payload: shoppingList,
+  });
+  dispatch({
+    type: REMOVE_LOADING,
+    payload: 'shoppingList',
   });
 };
 

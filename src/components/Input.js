@@ -68,7 +68,7 @@ Input.defaultProps = {
   label: false,
   value: '',
   tooltip: false,
-  tooltipText: false,
+  tooltipText: '',
 };
 
 export default Input;

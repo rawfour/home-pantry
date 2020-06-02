@@ -6,8 +6,9 @@ import {
   openPopUp as openPopUpAction,
   fetchProducts as fetchProductsAction,
 } from 'services/productList/actions';
+import Loading from '../components/Loader';
 
-const ProductList = ({ storage, fetchProducts, openPopUp }) => {
+const ProductList = ({ storage, fetchProducts, openPopUp, loading }) => {
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -44,16 +45,22 @@ const ProductList = ({ storage, fetchProducts, openPopUp }) => {
         </div>
       </div>
       <ul>
-        {storage.length ? (
-          storage.map((item) => <Product key={item.id} product={item} openPopUp={openPopUp} />)
+        {loading.fetchList ? (
+          <Loading />
         ) : (
-          <li className="text-center mt-16 py-5 px-12 text-gray-600 text-xl">
-            Your pantry is empty,
-            <br /> go shopping!{' '}
-            <span role="img" aria-label="grinning_face">
-              😀
-            </span>
-          </li>
+          <>
+            {storage.length ? (
+              storage.map((item) => <Product key={item.id} product={item} openPopUp={openPopUp} />)
+            ) : (
+              <li className="text-center mt-16 py-5 px-12 text-gray-600 text-xl">
+                Your pantry is empty,
+                <br /> go shopping!{' '}
+                <span role="img" aria-label="grinning_face">
+                  😀
+                </span>
+              </li>
+            )}
+          </>
         )}
       </ul>
     </div>
@@ -66,14 +73,16 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
+  const { loading } = state.loading;
   const { storage } = state.products;
-  return { storage };
+  return { storage, loading };
 };
 
 ProductList.propTypes = {
   storage: PropTypes.arrayOf(PropTypes.object),
   openPopUp: PropTypes.func.isRequired,
   fetchProducts: PropTypes.func.isRequired,
+  loading: PropTypes.shape().isRequired,
 };
 
 ProductList.defaultProps = {

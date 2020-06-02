@@ -70,15 +70,12 @@ const App = ({ isPopUpOpen, removeProduct, closePopUp, toRemove, firebaseInitial
           )}
         </>
       ) : (
-        <Loading />
+        <div className="w-screen h-screen flex flex-col justify-center ">
+          <Loading />
+        </div>
       )}
       <GlobalStyle />
     </>
-
-    // <>
-    //   <Loading />
-    //   <GlobalStyle />
-    // </>
   );
 };
 
@@ -105,7 +102,11 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => {
   const { isAuth } = state.auth;
   const { isPopUpOpen, toRemove } = state.products;
-  return { isPopUpOpen, toRemove, isAuth };
+  return {
+    isPopUpOpen,
+    toRemove,
+    isAuth,
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
