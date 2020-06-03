@@ -1,12 +1,6 @@
 import {
-  REMOVE_PRODUCT,
   FETCH_PRODUCTS,
   MAKE_PRODUCT_LIST,
-  OPEN_POPUP,
-  CLOSE_POPUP,
-  ADD_PRODUCT,
-  EDIT_PRODUCT,
-  CLEAR_MESSAGE,
   SET_LOADING,
   REMOVE_LOADING,
 } from 'services/actionTypes';
@@ -19,37 +13,24 @@ import {
   editProductInPantry,
 } from '../../firebase/index';
 
-export const openPopUp = (productId) => {
-  return {
-    type: OPEN_POPUP,
-    payload: productId,
-  };
-};
-
-export const closePopUp = () => {
-  return {
-    type: CLOSE_POPUP,
-  };
-};
-
 export const addProduct = (name, category, image, unit, isMax, isLow, currently) => async (
   dispatch,
 ) => {
   try {
     let imageURL = null;
+    dispatch({
+      type: SET_LOADING,
+      payload: 'addProduct',
+    });
     if (image) {
       await uploadImage(image);
       imageURL = await getImageURL(image.name);
     }
     await addProductToPantry(name, category, imageURL, unit, isMax, isLow, currently);
-    const succesMes = 'Product added';
-    dispatch({
-      type: ADD_PRODUCT,
-      payload: succesMes,
-    });
     setTimeout(() => {
       dispatch({
-        type: CLEAR_MESSAGE,
+        type: REMOVE_LOADING,
+        payload: 'addProduct',
       });
     }, 5000);
   } catch (error) {
@@ -119,34 +100,31 @@ export const getShoppingList = () => async (dispatch, getState) => {
   });
 };
 
-export const removeProduct = (productId) => async (dispatch) => {
+export const removeProduct = (productId) => async () => {
   await removeProductsFromPantry(productId);
-  dispatch({
-    type: REMOVE_PRODUCT,
-  });
 };
 
 export const editProduct = (id, name, category, image, img, unit, currently) => async (
   dispatch,
 ) => {
   try {
+    dispatch({
+      type: SET_LOADING,
+      payload: 'editProduct',
+    });
     let imageURL = img;
     if (image) {
-      imageURL = await getImageURL(image);
+      await uploadImage(image);
+      imageURL = await getImageURL(image.name);
     }
+
     await editProductInPantry(id, name, category, unit, currently, imageURL);
-    const succesMes = 'Product edited';
-    dispatch({
-      type: EDIT_PRODUCT,
-      payload: {
-        succesMes,
-      },
-    });
     setTimeout(() => {
       dispatch({
-        type: CLEAR_MESSAGE,
+        type: REMOVE_LOADING,
+        payload: 'editProduct',
       });
-    }, 4000);
+    }, 1000);
   } catch (error) {
     alert(error.message);
   }

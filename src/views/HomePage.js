@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getCurrentUsername } from '../firebase/index';
+import { getCurrentUserProfile } from '../firebase/index';
 
 const HomePage = ({ isAuth }) => {
   const [userName, setUserName] = useState(false);
 
   useEffect(() => {
-    const currentUserName = getCurrentUsername();
-    setUserName(currentUserName);
+    const currentUser = getCurrentUserProfile();
+    setUserName(currentUser.name);
   }, []);
 
   return (

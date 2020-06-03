@@ -5,6 +5,9 @@ const initialState = {
     fetchList: false,
     fetchSingle: false,
     shoppingList: false,
+    editProduct: false,
+    addProduct: false,
+    userEdit: false,
   },
 };
 

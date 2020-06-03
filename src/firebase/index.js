@@ -43,14 +43,36 @@ export const isInitialized = () => {
   });
 };
 
-export const getCurrentUsername = () => {
-  let user = auth.currentUser;
+export const getCurrentUserProfile = () => {
+  const user = auth.currentUser;
+  let currentUser;
 
-  if (user) {
-    user = user.displayName;
+  if (user != null) {
+    currentUser = {
+      name: user.displayName,
+      email: user.email,
+      photoUrl: user.photoURL,
+      emailVerified: user.emailVerified,
+      uid: user.uid,
+    };
   }
 
-  return user;
+  return currentUser;
+};
+
+export const updateUserProfile = (name) => {
+  const user = auth.currentUser;
+
+  user
+    .updateProfile({
+      displayName: name,
+    })
+    .then(() => {
+      // Update successful.
+    })
+    .catch((error) => {
+      alert(`Error: ${error}`);
+    });
 };
 
 export const getCurrentUserPantry = async () => {

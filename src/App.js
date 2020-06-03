@@ -6,16 +6,11 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import history from 'history.js';
 import Header from 'components/Header';
 import GlobalStyle from 'theme/GlobalStyle';
-import PopUp from 'components/PopUp';
-import {
-  removeProduct as removeProductAction,
-  closePopUp as closePopUpAction,
-} from 'services/productList/actions';
 import { routes } from './routes';
 import { firebaseInitialized as firebaseInitializedAction } from './services/authentication/actions';
 import Loading from './components/Loader';
 
-const App = ({ isPopUpOpen, removeProduct, closePopUp, toRemove, firebaseInitialized, isAuth }) => {
+const App = ({ firebaseInitialized, isAuth }) => {
   useEffect(() => {
     firebaseInitialized();
   });
@@ -32,7 +27,7 @@ const App = ({ isPopUpOpen, removeProduct, closePopUp, toRemove, firebaseInitial
                 path={path}
                 render={() =>
                   isAuth ? (
-                    <div className="page pb-16">
+                    <div className="page">
                       <Component />
                     </div>
                   ) : (
@@ -64,10 +59,6 @@ const App = ({ isPopUpOpen, removeProduct, closePopUp, toRemove, firebaseInitial
               <AnimatedSwitch />
             </div>
           </Router>
-
-          {isPopUpOpen && (
-            <PopUp removeProduct={removeProduct} productID={toRemove} closePopUp={closePopUp} />
-          )}
         </>
       ) : (
         <div className="w-screen h-screen flex flex-col justify-center ">
@@ -80,31 +71,21 @@ const App = ({ isPopUpOpen, removeProduct, closePopUp, toRemove, firebaseInitial
 };
 
 App.propTypes = {
-  removeProduct: PropTypes.func.isRequired,
-  closePopUp: PropTypes.func.isRequired,
-  isPopUpOpen: PropTypes.bool.isRequired,
-  toRemove: PropTypes.string,
   firebaseInitialized: PropTypes.func.isRequired,
   isAuth: PropTypes.oneOfType([PropTypes.bool, PropTypes.shape()]),
 };
 
 App.defaultProps = {
-  toRemove: null,
   isAuth: false,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  removeProduct: (productID) => dispatch(removeProductAction(productID)),
-  closePopUp: () => dispatch(closePopUpAction()),
   firebaseInitialized: (value) => dispatch(firebaseInitializedAction(value)),
 });
 
 const mapStateToProps = (state) => {
   const { isAuth } = state.auth;
-  const { isPopUpOpen, toRemove } = state.products;
   return {
-    isPopUpOpen,
-    toRemove,
     isAuth,
   };
 };

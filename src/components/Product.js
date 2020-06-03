@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ProgressBar from 'components/ProgressBar';
 
-const Product = ({ product, openPopUp }) => {
+const Product = ({ product, onOpen }) => {
   const { id, name, img, unit, isMax, isLow, currently } = product;
   const [loaded, setLoaded] = useState(false);
   const onImageLoaded = () => {
@@ -75,9 +75,9 @@ const Product = ({ product, openPopUp }) => {
             />
           </svg>
         </Link>
-        {openPopUp && (
+        {onOpen && (
           <button
-            onClick={() => openPopUp(id)}
+            onClick={() => onOpen(id)}
             type="button"
             className="border-solid border-2 shadow border-red-500 bg-red-200 rounded-full p-2 transform hover:scale-110 transition duration-100"
           >
@@ -98,7 +98,7 @@ const Product = ({ product, openPopUp }) => {
 
 Product.propTypes = {
   product: PropTypes.shape().isRequired,
-  openPopUp: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired,
 };
 
 export default Product;

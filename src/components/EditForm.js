@@ -11,7 +11,9 @@ import {
 import Input from './Input';
 import Select from './Select';
 import ImageUpload from './ImageUpload';
-import Loading from "./Loader";
+import Loading from './Loader';
+import Backdrop from './Backdrop';
+import withBackdrop from '../hoc/withBackdrop';
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -29,9 +31,10 @@ const ValidationSchema = Yup.object().shape({
     .required('Required'),
 });
 
-const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone, loading }) => {
+const EditForm = ({ id, editProduct, fetchSingleProduct, loading, open, onOpen, onClose }) => {
   const [formData, setFormData] = useState({});
   const [image, setImage] = useState();
+  const [actionDone, setActionDone] = useState(false);
 
   useEffect(() => {
     async function getProduct() {
@@ -45,26 +48,40 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone, loading }) 
     setImage(file);
   };
 
+  const handleActionDone = () => {
+    setActionDone(true);
+    setTimeout(() => {
+      setActionDone(false);
+    }, 4000);
+  };
+
+  const onSubmit = async (name, category, unit, currently) => {
+    onOpen();
+    await editProduct(id, name, category, image, formData.img, unit, currently);
+    onClose();
+    handleActionDone();
+  };
+
   return (
     <>
+      {actionDone && (
+        <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-600">
+          <span>Changes saved</span>
+        </div>
+      )}
       {formData.name && (
         <Formik
           initialValues={formData}
           validationSchema={ValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
             const { name, category, unit, currently } = values;
-            editProduct(id, name, category, image, formData.img, unit, currently);
             setSubmitting(false);
+            onSubmit(name, category, unit, currently);
           }}
         >
           {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
             <>
-              {actionDone && (
-                <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-600">
-                  <span>{actionDone}</span>
-                </div>
-              )}
-              <div className="mb-4 py-12 px-8 md:px-12 bg-white rounded">
+              <div className="py-12 px-8 md:px-12 bg-white rounded">
                 <h2 className=" w-full pb-12 text-2xl">Product edit</h2>
                 {loading.fetchSingle ? (
                   <Loading />
@@ -166,6 +183,7 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, actionDone, loading }) 
           )}
         </Formik>
       )}
+      {loading.editProduct && <Backdrop open={open} />}
     </>
   );
 };
@@ -174,8 +192,10 @@ EditForm.propTypes = {
   id: PropTypes.string.isRequired,
   fetchSingleProduct: PropTypes.func.isRequired,
   editProduct: PropTypes.func.isRequired,
-  actionDone: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   loading: PropTypes.shape().isRequired,
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onOpen: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -188,11 +208,9 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => {
   const { loading } = state.loading;
-  const { actionDone } = state.products;
   return {
-    actionDone,
     loading,
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditForm);
+export default withBackdrop(connect(mapStateToProps, mapDispatchToProps)(EditForm));
