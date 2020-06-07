@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import Product from 'components/Product';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -9,6 +10,43 @@ import {
 import Loading from '../components/Loader';
 import withDialog from '../hoc/withDialog';
 import Modal from '../components/Modal';
+
+const SwipedWrapper = styled.div`
+  min-width: 730px;
+  padding-bottom: 50px;
+`;
+
+const TableHead = styled.ul`
+  display: flex;
+  margin-bottom: 16px;
+  padding: 20px 48px;
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: 4px;
+`;
+
+const HeadCell = styled.li`
+  flex-basis: calc(100% / 6);
+  padding: 0 8px;
+  text-align: ${({ align }) => align || 'center'};
+  &:first-child {
+    padding: 0 8px 0 0;
+  }
+  &:last-child {
+    padding: 0 0 0 8px;
+  }
+`;
+
+const HeadCellText = styled.span`
+  color: ${({ theme }) => theme.colors.gray};
+`;
+
+const EmptyListInfo = styled.li`
+  text-align: center;
+  margin-top: 64px;
+  padding: 20px 48px;
+  color: ${({ theme }) => theme.colors.gray};
+  font-size: ${({ theme }) => theme.fontSizes.xl};
+`;
 
 const ProductList = ({ storage, fetchProducts, loading, removeProduct, open, onClose, onOpen }) => {
   useEffect(() => {
@@ -30,37 +68,32 @@ const ProductList = ({ storage, fetchProducts, loading, removeProduct, open, onC
 
   return (
     <>
-      <div
-        style={{
-          minWidth: 730,
-          paddingBottom: 50,
-        }}
-      >
-        <div className="flex mb-4 py-5 px-12 bg-white rounded">
-          <div className="w-1/6 pr-2">
-            <span className="text-gray-600">Image</span>
-          </div>
+      <SwipedWrapper>
+        <TableHead>
+          <HeadCell>
+            <HeadCellText>Image</HeadCellText>
+          </HeadCell>
 
-          <div className="w-1/6 px-2">
-            <span className="text-gray-600">Name</span>
-          </div>
+          <HeadCell>
+            <HeadCellText>Name</HeadCellText>
+          </HeadCell>
 
-          <div className="w-1/6 px-2 text-center">
-            <span className="text-gray-600">You have</span>
-          </div>
+          <HeadCell>
+            <HeadCellText>You have</HeadCellText>
+          </HeadCell>
 
-          <div className="w-1/6 px-2 text-center">
-            <span className="text-gray-600">Unit</span>
-          </div>
+          <HeadCell>
+            <HeadCellText>Unit</HeadCellText>
+          </HeadCell>
 
-          <div className="w-1/6 px-2 text-center">
-            <span className="text-gray-600">Pantry condition</span>
-          </div>
+          <HeadCell>
+            <HeadCellText>Pantry condition</HeadCellText>
+          </HeadCell>
 
-          <div className="w-1/6 pl-2 text-right">
-            <span className="text-gray-600">Actions</span>
-          </div>
-        </div>
+          <HeadCell align="right">
+            <HeadCellText>Actions</HeadCellText>
+          </HeadCell>
+        </TableHead>
         <ul>
           {loading.fetchList ? (
             <Loading />
@@ -71,18 +104,18 @@ const ProductList = ({ storage, fetchProducts, loading, removeProduct, open, onC
                   <Product key={item.id} product={item} onOpen={handleOpenModal} />
                 ))
               ) : (
-                <li className="text-center mt-16 py-5 px-12 text-gray-600 text-xl">
+                <EmptyListInfo>
                   Your pantry is empty,
                   <br /> go shopping!{' '}
                   <span role="img" aria-label="grinning_face">
                     😀
                   </span>
-                </li>
+                </EmptyListInfo>
               )}
             </>
           )}
         </ul>
-      </div>
+      </SwipedWrapper>
       <Modal
         open={open}
         onClose={onClose}

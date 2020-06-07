@@ -1,48 +1,54 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getCurrentUserProfile } from '../firebase/index';
+import PagecontentWrapper from '../components/page/PageContentWrapper';
+import Title from '../components/page/PageTitle';
+import Button from '../components/Button';
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  grid-gap: 15px;
+  padding-top: 48px;
+  width: 100%;
+  border-top: 2px solid ${({ theme }) => theme.colors.lightGray};
+  @media ${({ theme }) => theme.breakpoints.sm} {
+    flex-direction: row;
+    justify-content: center;
+  }
+`;
 
 const HomePage = ({ isAuth }) => {
-  const [userName, setUserName] = useState(false);
+  const [userInfo, setUserInfo] = useState(false);
 
   useEffect(() => {
     const currentUser = getCurrentUserProfile();
-    setUserName(currentUser.name);
+    setUserInfo(currentUser);
   }, []);
 
   return (
-    <div className="mb-4 py-12 px-8 md:px-12 bg-white rounded">
-      <h2 className=" w-full text-center pb-12 text-2xl">
-        Welcome in your home pantry {userName || 'guest'}!
-      </h2>
-      <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
+    <PagecontentWrapper>
+      <Title>Welcome in your home pantry {userInfo ? userInfo.name : 'guest'}!</Title>
+      <ButtonsWrapper>
         {isAuth ? (
-          <Link
-            className="w-full md:w-auto cursor-pointer text-center mb-4 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:border-black hover:text-black text-green-500"
-            to="/yourStorage"
-          >
-            Go to pantry
+          <Link to="/yourStorage">
+            <Button>Go to pantry</Button>
           </Link>
         ) : (
           <>
-            <Link
-              to="/login"
-              className="w-full md:w-auto cursor-pointer text-center mb-4 md:mr-4 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:border-black hover:text-black text-green-500"
-            >
-              Sign in
+            <Link to="/login">
+              <Button>Sign in</Button>
             </Link>
-            <Link
-              className="w-full md:w-auto cursor-pointer text-center mb-4 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-red-500 bg-white hover:border-black hover:text-black text-red-500"
-              to="/register"
-            >
-              Sign up
+            <Link to="/register">
+              <Button reverse>Sign up</Button>
             </Link>
           </>
         )}
-      </div>
-    </div>
+      </ButtonsWrapper>
+    </PagecontentWrapper>
   );
 };
 

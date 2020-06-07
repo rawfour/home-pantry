@@ -1,7 +1,121 @@
 import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ProgressBar from 'components/ProgressBar';
+import FastfoodIcon from '@material-ui/icons/Fastfood';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+const ProductWrapper = styled.li`
+  display: flex;
+  margin-bottom: 16px;
+  padding: 20px 48px;
+  background-color: ${({ theme }) => theme.colors.white};
+  height: 128px;
+  border-radius: 4px;
+`;
+
+const ProductImage = styled.img`
+  border-radius: 4px;
+  display: block;
+  max-height: 100px;
+`;
+
+const ImagePlaceholder = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 96px;
+  width: 96px;
+  border-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.lightGray};
+  position: absolute;
+`;
+
+const FoodIcon = styled(FastfoodIcon)`
+  height: 42px;
+  width: 42px;
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8px;
+  width: calc(100% / 6);
+  ${({ image }) =>
+    image &&
+    css`
+      position: relative;
+      padding: 0 8px 0 0;
+    `};
+  ${({ actions }) =>
+    actions &&
+    css`
+      padding: 0 0 0 8px;
+      justify-content: flex-end;
+      grid-gap: 16px;
+    `}
+`;
+
+const EditButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid ${({ theme }) => theme.colors.accept};
+  box-shadow: ${({ theme }) => theme.shadows.basic};
+  background-color: ${({ theme }) => theme.colors.lightAccept};
+  color: ${({ theme }) => theme.colors.accept};
+  border-radius: 100%;
+  height: 35px;
+  width: 35px;
+  transition: 0.1s;
+  transform: scale(1);
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const PenIcon = styled(EditIcon)`
+  height: 24px;
+  width: 24px;
+`;
+
+const TrashButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid ${({ theme }) => theme.colors.discard};
+  box-shadow: ${({ theme }) => theme.shadows.basic};
+  background-color: ${({ theme }) => theme.colors.lightDiscard};
+  color: ${({ theme }) => theme.colors.discard};
+  border-radius: 100%;
+  height: 35px;
+  width: 35px;
+  transition: 0.1s;
+  transform: scale(1);
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+const TrashIcon = styled(DeleteIcon)`
+  height: 24px;
+  width: 24px;
+`;
+
+const ProductInfo = styled.span`
+  font-size: ${({ theme, big }) => (big ? theme.fontSizes.l : theme.fontSizes.m)};
+  @media ${({ theme }) => theme.breakpoints.md} {
+    font-size: ${({ theme, big }) => (big ? theme.fontSizes.xl : theme.fontSizes.l)};
+  }
+`;
+
+const ContentInnerWrapper = styled.div`
+  width: 100%;
+`;
 
 const Product = ({ product, onOpen }) => {
   const { id, name, img, unit, isMax, isLow, currently } = product;
@@ -11,88 +125,47 @@ const Product = ({ product, onOpen }) => {
   };
 
   return (
-    <li className="flex mb-4 py-5 px-12 bg-white h-32 rounded">
-      <div className="flex justify-center items-center pr-2 w-1/6 relative">
-        {img && (
-          <img
-            className="animated-img rounded block"
-            src={img}
-            alt={name}
-            onLoad={onImageLoaded}
-            style={{
-              maxHeight: 100,
-            }}
-          />
-        )}
+    <ProductWrapper>
+      <ContentWrapper image>
+        {img && <ProductImage src={img} alt={name} onLoad={onImageLoaded} />}
 
         {!loaded && (
-          <div className="animated-img flex justify-center items-center h-24 w-24 rounded bg-gray-200 absolute">
-            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="37" viewBox="0 0 20 16">
-              <path
-                id="icon-image"
-                d="M4,4H20a2,2,0,0,1,2,2V18a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2.006,2.006,0,0,1,4,4Zm16,8.59V6H4v6.59l4.3-4.3a1,1,0,0,1,1.4,0l5.3,5.3,2.3-2.3a1,1,0,0,1,1.4,0l1.3,1.3Zm0,2.82-2-2-2.3,2.3a1,1,0,0,1-1.4,0L9,10.4l-5,5V18H20ZM15,10a1,1,0,1,1,1-1A1,1,0,0,1,15,10Z"
-                transform="translate(-2 -4)"
-                fill="#fff"
-              />
-            </svg>
-          </div>
+          <ImagePlaceholder className="animated-img">
+            <FoodIcon />
+          </ImagePlaceholder>
         )}
-      </div>
+      </ContentWrapper>
 
-      <div className="flex items-center w-1/6 px-2">
-        <span className="text-lg md:text-xl">{name}</span>
-      </div>
+      <ContentWrapper>
+        <ProductInfo big>{name}</ProductInfo>
+      </ContentWrapper>
 
-      <div className="flex justify-center items-center w-1/6 px-2">
-        <span className="text-md md:text-lg">{currently}</span>
-      </div>
+      <ContentWrapper>
+        <ProductInfo>{currently}</ProductInfo>
+      </ContentWrapper>
 
-      <div className="flex justify-center items-center w-1/6 px-2">
-        <span className="text-md md:text-lg">{unit}</span>
-      </div>
+      <ContentWrapper>
+        <ProductInfo>{unit}</ProductInfo>
+      </ContentWrapper>
 
-      <div className="flex justify-center items-center w-1/6 px-2">
-        <div className="w-full">
+      <ContentWrapper>
+        <ContentInnerWrapper>
           <ProgressBar isMax={isMax} isLow={isLow} currently={currently} />
-        </div>
-      </div>
-      <div className="flex justify-end items-center w-1/6 pl-2">
-        <Link
-          to={`/product/${id}/edit`}
-          className="border-solid border-2 shadow border-green-500 bg-green-200 rounded-full p-2 mr-4 transform hover:scale-110 transition duration-100"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="19.986"
-            height="19.986"
-            viewBox="0 0 19.986 19.986"
-          >
-            <path
-              id="icon-edit"
-              d="M6.3,12.3l10-10a1,1,0,0,1,1.4,0l4,4a1,1,0,0,1,0,1.4l-10,10a1,1,0,0,1-.7.3H7a1,1,0,0,1-1-1V13a1,1,0,0,1,.3-.7ZM8,16h2.59l9-9L17,4.41l-9,9Zm10-2a1,1,0,0,1,2,0v6a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2.006,2.006,0,0,1,4,4h6a1,1,0,0,1,0,2H4V20H18Z"
-              transform="translate(-2 -2.014)"
-              fill="#48bb78"
-            />
-          </svg>
+        </ContentInnerWrapper>
+      </ContentWrapper>
+      <ContentWrapper actions>
+        <Link to={`/product/${id}/edit`}>
+          <EditButton>
+            <PenIcon />
+          </EditButton>
         </Link>
         {onOpen && (
-          <button
-            onClick={() => onOpen(id)}
-            type="button"
-            className="border-solid border-2 shadow border-red-500 bg-red-200 rounded-full p-2 transform hover:scale-110 transition duration-100"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-              <path
-                id="icon-trash"
-                d="M8,6V4a2.006,2.006,0,0,1,2-2h4a2,2,0,0,1,2,2V6h5a1,1,0,0,1,0,2H20V20a2,2,0,0,1-2,2H6a2,2,0,0,1-2-2V8H3A1,1,0,0,1,3,6ZM6,8V20H18V8Zm8-2V4H10V6Zm-4,4a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,10,10Zm4,0a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,14,10Z"
-                transform="translate(-2 -2)"
-                fill="#f56565"
-              />
-            </svg>
-          </button>
+          <TrashButton onClick={() => onOpen(id)} type="button">
+            <TrashIcon />
+          </TrashButton>
         )}
-      </div>
-    </li>
+      </ContentWrapper>
+    </ProductWrapper>
   );
 };
 

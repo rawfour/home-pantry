@@ -1,9 +1,29 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ProductToBuy from 'components/ProductToBuy';
 import { getShoppingList as getShoppingListAction } from 'services/productList/actions';
 import Loading from '../components/Loader';
+import PageContentWrapper from '../components/page/PageContentWrapper';
+import Title from '../components/page/PageTitle';
+
+const InnerWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 16px 0;
+  grid-gap: 16px;
+`;
+
+const EmptyListInfo = styled.div`
+  text-align: center;
+  margin-top: 64px;
+  padding: 20px 48px;
+  color: ${({ theme }) => theme.colors.gray};
+  font-size: ${({ theme }) => theme.fontSizes.xl};
+`;
 
 const ShoppingList = ({ getShoppingList, shoppingList, loading }) => {
   useEffect(() => {
@@ -11,31 +31,27 @@ const ShoppingList = ({ getShoppingList, shoppingList, loading }) => {
   }, []);
 
   return (
-    <>
-      <div className="mb-4 pb-12 px-8 md:px-12 bg-gray-300 rounded">
-        <h2 className=" w-full pb-12 text-2xl">Shopping List</h2>
-        {loading.shoppingList ? (
-          <Loading />
-        ) : (
-          <>
-            <div className="flex justify-center flex-wrap items-center py-4">
-              {shoppingList.length ? (
-                shoppingList.map((item) => <ProductToBuy key={item.id} product={item} />)
-              ) : (
-                <div className="text-center mt-16 py-5 px-12 text-gray-600 text-xl">
-                  Nothing to buy,
-                  <br />
-                  you have everything!{' '}
-                  <span role="img" aria-label="finger_up">
-                    👍
-                  </span>
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </>
+    <PageContentWrapper transparent>
+      <Title align="left">Shopping List</Title>
+      {loading.shoppingList ? (
+        <Loading />
+      ) : (
+        <InnerWrapper>
+          {shoppingList.length ? (
+            shoppingList.map((item) => <ProductToBuy key={item.id} product={item} />)
+          ) : (
+            <EmptyListInfo>
+              Nothing to buy,
+              <br />
+              you have everything!{' '}
+              <span role="img" aria-label="finger_up">
+                👍
+              </span>
+            </EmptyListInfo>
+          )}
+        </InnerWrapper>
+      )}
+    </PageContentWrapper>
   );
 };
 

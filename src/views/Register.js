@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -7,6 +8,43 @@ import { connect } from 'react-redux';
 import Input from '../components/Input';
 import { register, addPantry } from '../firebase/index';
 import { firebaseInitialized as firebaseInitializedAction } from '../services/authentication/actions';
+import PageContentWrapper from '../components/page/PageContentWrapper';
+import Title from '../components/page/PageTitle';
+import Button from '../components/Button';
+
+const Form = styled.form`
+  padding-bottom: 16px;
+`;
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+  width: 100%;
+  border-top: 2px solid ${({ theme }) => theme.colors.lightGray};
+  @media ${({ theme }) => theme.breakpoints.sm} {
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
+const InnerWrapper = styled.div`
+  width: 100%;
+  grid-gap: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  margin: 0 auto;
+  @media ${({ theme }) => theme.breakpoints.sm} {
+    width: auto;
+  }
+`;
+
+const Separator = styled.span`
+  text-transform: uppercase;
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  font-size: ${({ theme }) => theme.fontSizes.s};
+  text-align: center;
+`;
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -56,15 +94,9 @@ const Register = ({ history, firebaseInitialized }) => {
       }}
     >
       {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-        <div
-          className="mb-4 mx-auto p-12 bg-white rounded"
-          style={{
-            minWidth: '300px',
-            maxWidth: '500px',
-          }}
-        >
-          <h2 className=" w-full text-center pb-12 text-2xl">Sign up</h2>
-          <form id="register" className="pb-4" onSubmit={handleSubmit} noValidate>
+        <PageContentWrapper small>
+          <Title>Sign up</Title>
+          <Form id="register" onSubmit={handleSubmit} noValidate>
             <Input
               id="name"
               name="name"
@@ -95,26 +127,22 @@ const Register = ({ history, firebaseInitialized }) => {
               action={handleChange}
               blur={handleBlur}
             />
-          </form>
+          </Form>
 
-          <div className="flex flex-col gap-5 items-center justify-center pt-10 w-full border-t-2 border-gray-400 border-solid">
-            <button
-              className=" cursor-pointer w-56 text-center duration-200 text-base py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:border-gray-600 hover:text-gray-600 text-green-500"
-              type="submit"
-              form="register"
-              disabled={isSubmitting}
-            >
-              Register
-            </button>
-            <span className="uppercase text-gray-700 text-xs font-bold">- or -</span>
-            <Link
-              className=" cursor-pointer w-56 text-center duration-200 text-base py-2 leading-none border-2 border-solid rounded border-gray-600 bg-white hover:text-green-500 text-gray-600 hover:border-green-500"
-              to="/login"
-            >
-              Go back to Login
-            </Link>
-          </div>
-        </div>
+          <ButtonsWrapper>
+            <InnerWrapper>
+              <Button longer type="submit" form="register" disabled={isSubmitting}>
+                Register
+              </Button>
+              <Separator>- or -</Separator>
+              <Link to="/login">
+                <Button longer reverse>
+                  Go back to Login
+                </Button>
+              </Link>
+            </InnerWrapper>
+          </ButtonsWrapper>
+        </PageContentWrapper>
       )}
     </Formik>
   );

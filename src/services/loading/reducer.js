@@ -7,7 +7,6 @@ const initialState = {
     shoppingList: false,
     editProduct: false,
     addProduct: false,
-    userEdit: false,
   },
 };
 

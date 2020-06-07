@@ -1,5 +1,114 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import FastfoodIcon from '@material-ui/icons/Fastfood';
+
+const Productcard = styled.div`
+  border-radius: 4px;
+  box-shadow: ${({ theme }) => theme.shadows.basic};
+  background-color: ${({ theme }) => theme.colors.white};
+  overflow: hidden;
+  padding: 16px 24px;
+  max-width: 300px;
+`;
+
+const ImageWrapper = styled.div`
+  width: 100%;
+  height: 252px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ProductImage = styled.img`
+  display: block;
+  max-height: 100%;
+`;
+
+const ImagePlaceholder = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.lightGray};
+  position: absolute;
+`;
+
+const FoodIcon = styled(FastfoodIcon)`
+  height: 81px;
+  width: 81px;
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+const ProductInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 16px;
+`;
+
+const TitleWrapper = styled.div`
+  width: 100%;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  border-bottom-width: 2px;
+  border-color: ${({ theme }) => theme.colors.lightGray};
+`;
+
+const Title = styled.span`
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: ${({ theme }) => theme.fontSizes.xl};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-bottom: 8px;
+`;
+
+const PantryState = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
+const Key = styled.span`
+  width: 55%;
+  padding: 16px 0;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: ${({ theme, size }) => (size ? theme.fontSizes[size] : theme.fontSizes.s)};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-bottom: 8px;
+`;
+
+const Value = styled.span`
+  width: 45%;
+  padding: 16px 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  letter-spacing: 0.4px;
+  color: ${({ theme, color }) => (color ? theme.colors[color] : theme.colors.text)};
+  font-size: ${({ theme, size }) => (size ? theme.fontSizes[size] : theme.fontSizes.m)};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-bottom: 8px;
+`;
+
+const Summary = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top-width: 2px;
+  border-color: ${({ theme }) => theme.colors.lightGray};
+`;
 
 const ProductToBuy = ({ product }) => {
   const { name, img, unit, isMax, isLow, currently } = product;
@@ -8,81 +117,38 @@ const ProductToBuy = ({ product }) => {
     setLoaded(true);
   };
   return (
-    <div
-      className="rounded shadow bg-white overflow-hidden py-4 px-6 m-4"
-      style={{
-        maxWidth: 300,
-      }}
-    >
-      <div
-        className="w-full rounded flex justify-center items-center"
-        style={{
-          height: 252,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
+    <Productcard>
+      <ImageWrapper>
         {img && (
-          <img
-            className="animated-img block"
-            src={img}
-            alt={name}
-            onLoad={onImageLoaded}
-            style={{
-              maxHeight: '100%',
-            }}
-          />
+          <ProductImage className="animated-img" src={img} alt={name} onLoad={onImageLoaded} />
         )}
 
         {!loaded && (
-          <div className="animated-img flex w-full h-full justify-center items-center rounded bg-gray-200 absolute">
-            <svg xmlns="http://www.w3.org/2000/svg" width="85" height="77" viewBox="0 0 20 16">
-              <path
-                id="icon-image"
-                d="M4,4H20a2,2,0,0,1,2,2V18a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2.006,2.006,0,0,1,4,4Zm16,8.59V6H4v6.59l4.3-4.3a1,1,0,0,1,1.4,0l5.3,5.3,2.3-2.3a1,1,0,0,1,1.4,0l1.3,1.3Zm0,2.82-2-2-2.3,2.3a1,1,0,0,1-1.4,0L9,10.4l-5,5V18H20ZM15,10a1,1,0,1,1,1-1A1,1,0,0,1,15,10Z"
-                transform="translate(-2 -4)"
-                fill="#fff"
-              />
-            </svg>
-          </div>
+          <ImagePlaceholder>
+            <FoodIcon />
+          </ImagePlaceholder>
         )}
-      </div>
-      <div className="flex flex-col w-full pt-4">
-        <div className="w-full pb-4 mb-4 text-center border-b-2 border-gray-400">
-          <span className="uppercase tracking-wide text-gray-700 text-xl font-bold mb-2">
-            {name}
-          </span>
-        </div>
-        <div className="flex flex-wrap w-full">
-          <span className="w-1/2 text-left py-4 block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-            Maximum in pantry:
-          </span>
-          <span className="w-1/2 text-right py-4 block  tracking-wide text-gray-700 text-base font-bold mb-2">
-            {`${isMax} ${unit}`}
-          </span>
-          <span className="w-1/2 text-left py-4 block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-            Minimum in pantry:
-          </span>
-          <span className="w-1/2 text-right py-4 block  tracking-wide text-gray-700 text-base font-bold mb-2">
-            {`${isLow} ${unit}`}
-          </span>
-          <span className="w-1/2 text-left py-4 block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-            Currently in pantry:
-          </span>
-          <span className="w-1/2 text-right py-4 block  tracking-wide text-gray-700 text-base font-bold mb-2">
-            {`${currently} ${unit}`}
-          </span>
-        </div>
-        <div className="flex flex-wrap w-full pt-4 mt-4 border-t-2 border-gray-400">
-          <span className="w-1/2 text-left py-4 block uppercase tracking-wide text-gray-700 text-xl font-bold mb-2">
-            Buy:
-          </span>
-          <span className="w-1/2 text-right py-4 block  tracking-wide text-green-500 text-xl font-bold mb-2">
+      </ImageWrapper>
+      <ProductInfoWrapper>
+        <TitleWrapper>
+          <Title>{name}</Title>
+        </TitleWrapper>
+        <PantryState>
+          <Key>Maximum in pantry:</Key>
+          <Value>{`${isMax} ${unit}`}</Value>
+          <Key>Minimum in pantry:</Key>
+          <Value>{`${isLow} ${unit}`}</Value>
+          <Key>Currently in pantry:</Key>
+          <Value>{`${currently} ${unit}`}</Value>
+        </PantryState>
+        <Summary>
+          <Key size="xl">Buy:</Key>
+          <Value size="xl" color="primary">
             {`${isMax - currently} ${unit}`}
-          </span>
-        </div>
-      </div>
-    </div>
+          </Value>
+        </Summary>
+      </ProductInfoWrapper>
+    </Productcard>
   );
 };
 

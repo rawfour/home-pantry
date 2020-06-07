@@ -4,7 +4,7 @@ import ProductList from 'views/ProductList';
 import ShoppingList from 'views/ShoppingList';
 import AddProduct from 'views/AddProduct';
 import EditProduct from 'views/EditProduct';
-import Settings from 'views/Settings';
+import Account from 'views/Account';
 import NotFound from 'views/NotFound';
 import HomePage from 'views/HomePage';
 
@@ -59,9 +59,9 @@ export const routes = [
     needAuth: true,
   },
   {
-    name: 'settings',
-    path: '/settings',
-    Component: Settings,
+    name: 'account',
+    path: '/account',
+    Component: Account,
     isExact: true,
     needAuth: true,
   },

@@ -12,10 +12,24 @@ const GlobalStyle = createGlobalStyle`
   padding: 0;
 }
 
+html {
+    font-size: 62.5%;
+  }
+
   body {
     font-family: 'Montserrat', sans-serif;
-    background-color: #e2e8f0;
+    font-size: ${({ theme }) => theme.fontSizes.m};
+    color: ${({ theme }) => theme.colors.text};
+    background-color: ${({ theme }) => theme.colors.lightGray};
   }
+
+a{
+  text-decoration: none;
+}
+
+ul,li{
+  list-style: none;
+}
 
   #root{
     position: relative;

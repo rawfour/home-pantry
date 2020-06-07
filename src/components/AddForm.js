@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -9,6 +10,50 @@ import Select from './Select';
 import ImageUpload from './ImageUpload';
 import Backdrop from './Backdrop';
 import withBackdrop from '../hoc/withBackdrop';
+import PageContentWrapper from './page/PageContentWrapper';
+import Title from './page/PageTitle';
+import Button from './Button';
+import MessageDone from './MessageDone';
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const Form = styled.form`
+  width: 100%;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    width: 50%;
+    padding-right: 16px;
+  }
+  @media ${({ theme }) => theme.breakpoints.lg} {
+    padding-right: 64px;
+  }
+`;
+
+const ImageLoaderWrapper = styled.div`
+  width: 100%;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    width: 50%;
+    padding-left: 16px;
+  }
+  @media ${({ theme }) => theme.breakpoints.lg} {
+    padding-left: 64px;
+  }
+`;
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 48px;
+  width: 100%;
+  border-top: 2px solid ${({ theme }) => theme.colors.lightGray};
+  grid-gap: 16px;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    flex-direction: row;
+    justify-content: center;
+  }
+`;
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -68,11 +113,7 @@ const AddForm = ({ addProduct, loading, open, onOpen, onClose }) => {
 
   return (
     <>
-      {actionDone && (
-        <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-600">
-          <span>Product added</span>
-        </div>
-      )}
+      {actionDone && <MessageDone>Product added</MessageDone>}
       <Formik
         initialValues={initialValues}
         validationSchema={ValidationSchema}
@@ -84,15 +125,10 @@ const AddForm = ({ addProduct, loading, open, onOpen, onClose }) => {
       >
         {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
           <>
-            <div className="py-12 px-8 md:px-12 bg-white rounded">
-              <h2 className=" w-full pb-12 text-2xl">Add product</h2>
-              <div className="flex flex-wrap">
-                <form
-                  id="add"
-                  onSubmit={handleSubmit}
-                  className="w-full md:w-1/2 md:pr-4 lg:pr-16"
-                  noValidate
-                >
+            <PageContentWrapper>
+              <Title align="left">Add product</Title>
+              <ContentWrapper>
+                <Form id="add" onSubmit={handleSubmit} noValidate>
                   <Input
                     value={values.name}
                     type="text"
@@ -167,22 +203,17 @@ const AddForm = ({ addProduct, loading, open, onOpen, onClose }) => {
                     tooltip
                     tooltipText="The current amount of this product you have right now."
                   />
-                </form>
-                <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
+                </Form>
+                <ImageLoaderWrapper>
                   <ImageUpload getImageFile={getImageFile} />
-                </div>
-                <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
-                  <button
-                    className="w-full md:w-auto cursor-pointer text-center mb-4 md:ml-4 md:order-2 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:border-black hover:text-black text-green-500"
-                    type="submit"
-                    form="add"
-                    disabled={isSubmitting}
-                  >
+                </ImageLoaderWrapper>
+                <ButtonsWrapper>
+                  <Button type="submit" form="add" disabled={isSubmitting}>
                     Add product
-                  </button>
-                </div>
-              </div>
-            </div>
+                  </Button>
+                </ButtonsWrapper>
+              </ContentWrapper>
+            </PageContentWrapper>
           </>
         )}
       </Formik>

@@ -1,8 +1,8 @@
 import React from 'react';
 import AccountForm from '../components/AccountForm';
 
-const Settings = () => {
+const Account = () => {
   return <AccountForm />;
 };
 
-export default Settings;
+export default Account;

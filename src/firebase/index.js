@@ -60,7 +60,35 @@ export const getCurrentUserProfile = () => {
   return currentUser;
 };
 
-export const updateUserProfile = (name) => {
+export const reauthUser = () => {
+  const user = auth.currentUser;
+  let credential;
+
+  user
+    .reauthenticateWithCredential(credential)
+    .then(() => {
+      return true;
+    })
+    .catch((error) => {
+      alert(`Error: ${error}`);
+    });
+};
+
+export const updateUserEmail = (email) => {
+  const user = auth.currentUser;
+  let credential;
+
+  user
+    .reauthenticateWithCredential(credential)
+    .then((userCredential) => {
+      userCredential.user.updateEmail(email);
+    })
+    .catch((error) => {
+      alert(`Error: ${error}`);
+    });
+};
+
+export const updateUserName = (name) => {
   const user = auth.currentUser;
 
   user
@@ -68,7 +96,7 @@ export const updateUserProfile = (name) => {
       displayName: name,
     })
     .then(() => {
-      // Update successful.
+      return true;
     })
     .catch((error) => {
       alert(`Error: ${error}`);

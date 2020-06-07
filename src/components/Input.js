@@ -1,7 +1,45 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { ErrorMessage } from 'formik';
 import Tooltip from './Tooltip';
+
+const LabelWrapper = styled.label`
+  display: flex;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+  font-size: ${({ theme }) => theme.fontSizes.s};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-bottom: 8px;
+`;
+
+const Label = styled.span`
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+`;
+
+const ErrorText = styled.span`
+  color: ${({ theme }) => theme.colors.discard};
+`;
+
+const StyledInput = styled.input`
+  appearance: none;
+  display: block;
+  width: 100%;
+  transition: 0.2s;
+  background-color: ${({ theme }) => theme.colors.lightGray};
+  color: ${({ theme }) => theme.colors.text};
+  border: 2px solid ${({ theme }) => theme.colors.lightGray};
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  line-height: 20px;
+  &:focus {
+    outline: none;
+    background-color: ${({ theme }) => theme.colors.white};
+  }
+`;
 
 const Input = ({
   id,
@@ -18,28 +56,25 @@ const Input = ({
   return (
     <>
       {label && (
-        <label
-          className="flex uppercase tracking-wide flex-wrap text-gray-700 text-xs font-bold mb-2"
-          htmlFor={id}
-        >
-          <span className="flex items-center whitespace-no-wrap">
+        <LabelWrapper htmlFor={id}>
+          <Label>
             {label}
             {tooltip && <Tooltip text={tooltipText} />}
-          </span>
+          </Label>
 
           <ErrorMessage name={errorMessage}>
             {(msg) => (
               <>
                 <pre> </pre>
-                <span className="text-red-400">* {msg}</span>
+                <ErrorText>* {msg}</ErrorText>
               </>
             )}
           </ErrorMessage>
-        </label>
+        </LabelWrapper>
       )}
 
-      <input
-        className=" appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-6 leading-tight focus:outline-none focus:bg-white"
+      <StyledInput
+        className="focus:outline-none focus:bg-white"
         id={id}
         type={type}
         name={name}

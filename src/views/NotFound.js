@@ -1,12 +1,12 @@
 import React from 'react';
+import PageContentWrapper from '../components/page/PageContentWrapper';
+import Title from '../components/page/PageTitle';
 
 const NotFound = () => {
   return (
-    <>
-      <div className="mb-4 py-12 px-8 md:px-12 bg-white rounded">
-        <h2 className=" w-full pb-12 text-2xl">Page not found</h2>
-      </div>
-    </>
+    <PageContentWrapper>
+      <Title align="left">Page not found</Title>
+    </PageContentWrapper>
   );
 };
 

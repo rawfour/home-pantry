@@ -1,14 +1,31 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Redirect, Switch, withRouter } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import history from 'history.js';
 import Header from 'components/Header';
 import GlobalStyle from 'theme/GlobalStyle';
+import MainTemplate from './templates/MainTemplate';
 import { routes } from './routes';
 import { firebaseInitialized as firebaseInitializedAction } from './services/authentication/actions';
 import Loading from './components/Loader';
+
+const PageWrapper = styled.div`
+  padding: 64px 16px;
+  position: relative;
+  max-width: 1500px;
+  margin: 0 auto;
+`;
+
+const LoadingWrapper = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 
 const App = ({ firebaseInitialized, isAuth }) => {
   useEffect(() => {
@@ -50,23 +67,23 @@ const App = ({ firebaseInitialized, isAuth }) => {
   ));
 
   return (
-    <>
+    <MainTemplate>
       {isAuth !== false ? (
         <>
           <Router history={history}>
             <Header />
-            <div className="page-wrapper md:px-4 py-16">
+            <PageWrapper>
               <AnimatedSwitch />
-            </div>
+            </PageWrapper>
           </Router>
         </>
       ) : (
-        <div className="w-screen h-screen flex flex-col justify-center ">
+        <LoadingWrapper>
           <Loading />
-        </div>
+        </LoadingWrapper>
       )}
       <GlobalStyle />
-    </>
+    </MainTemplate>
   );
 };
 

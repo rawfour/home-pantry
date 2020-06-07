@@ -78,16 +78,13 @@ export const fetchProducts = () => async (dispatch) => {
   });
 };
 
-export const getShoppingList = () => async (dispatch, getState) => {
+export const getShoppingList = () => async (dispatch) => {
   dispatch({
     type: SET_LOADING,
     payload: 'shoppingList',
   });
-  let { storage } = getState().products;
 
-  if (storage.length === 0 || !storage) {
-    storage = await getCurrentUserPantry();
-  }
+  const storage = await getCurrentUserPantry();
 
   const shoppingList = storage.filter((item) => item.currently <= item.isLow);
   dispatch({

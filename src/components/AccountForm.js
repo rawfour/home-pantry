@@ -1,18 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components'; // , { css }
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import Input from './Input';
-import Loading from './Loader';
+import Title from './page/PageTitle';
+import PageContentWrapper from './page/PageContentWrapper';
 // import ImageUpload from './ImageUpload';
 import { userEdit as userEditAction } from '../services/authentication/actions';
 import { getCurrentUserProfile } from '../firebase/index';
-import Backdrop from './Backdrop';
-import withBackdrop from '../hoc/withBackdrop';
+// import Basic from './userAccount/Basic';
+// import Advanced from './userAccount/Advanced';
+import MessageDone from './MessageDone';
+import Button from './Button';
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+// const TabsWrapper = styled.div`
+//   display: flex;
+// `;
+
+// const Tab = styled.span`
+//   flex-basis: 50%;
+//   background-color: #edf2f7;
+//   padding: 10px;
+//   box-shadow: 0 -3px 3px 0 rgba(0, 0, 0, 0.05);
+//   color: #4a5568;
+//   outline: 0;
+//   cursor: pointer;
+//   text-align: center;
+//   &:first-child {
+//     border-radius: 3px 0 0 3px;
+//   }
+//   &:last-child {
+//     border-radius: 0 3px 3px 0;
+//   }
+//   ${({ active }) =>
+//     active &&
+//     css`
+//       background-color: #ffffff;
+//       transform: scale(1, 1.1);
+//       &:last-child,
+//       &:first-child {
+//         border-radius: 3px;
+//       }
+//     `}
+// `;
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const Form = styled.form`
+  width: 100%;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    width: 50%;
+    padding-right: 16px;
+  }
+  @media ${({ theme }) => theme.breakpoints.lg} {
+    padding-right: 64px;
+  }
+`;
+
+const ImageLoaderWrapper = styled.div`
+  width: 100%;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    width: 50%;
+    padding-left: 16px;
+  }
+  @media ${({ theme }) => theme.breakpoints.lg} {
+    padding-left: 64px;
+  }
+`;
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 48px;
+  width: 100%;
+  border-top: 2px solid ${({ theme }) => theme.colors.lightGray};
+  grid-gap: 16px;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    flex-direction: row;
+    justify-content: center;
+  }
+`;
+
+// const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const ValidationSchema = Yup.object().shape({
   name: Yup.string()
@@ -23,14 +99,21 @@ const ValidationSchema = Yup.object().shape({
     .min(2, 'User name is too short')
     .max(20, 'User name is too long')
     .required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-  tel: Yup.string().matches(phoneRegExp, {
-    message: 'Invalid phone number',
-    excludeEmptyString: true,
-  }),
+  // email: Yup.string().email('Invalid email').required('Required'),
+  // tel: Yup.string().matches(phoneRegExp, {
+  //   message: 'Invalid phone number',
+  //   excludeEmptyString: true,
+  // }),
+  // password: Yup.string()
+  //   .matches(/[a-zA-Z]/, {
+  //     message: 'Password can only contain letters',
+  //     excludeEmptyString: true,
+  //   })
+  //   .min(6, 'Password should contain at least 6 characters')
+  //   .required('Required'),
 });
 
-const AccountForm = ({ loading, userEdit, open, onOpen, onClose }) => {
+const AccountForm = ({ userEdit }) => {
   const [formData, setFormData] = useState({});
   const [actionDone, setActionDone] = useState(false);
 
@@ -50,73 +133,67 @@ const AccountForm = ({ loading, userEdit, open, onOpen, onClose }) => {
   };
 
   const onSubmit = async (name) => {
-    onOpen();
     await userEdit(name);
-    const updatedUser = await getCurrentUserProfile();
-    setFormData(updatedUser);
-    setTimeout(() => {
-      onClose();
-      handleActionDone();
-    }, 4000);
+    handleActionDone();
   };
 
   return (
     <>
-      {actionDone && (
-        <div className="py-4 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 bg-green-200 text-green-600">
-          <span>Changes saved</span>
-        </div>
-      )}
+      {actionDone && <MessageDone>Changes saved</MessageDone>}
       {formData.name && (
         <Formik
           initialValues={formData}
           validationSchema={ValidationSchema}
           onSubmit={(values, { setSubmitting }) => {
-            const {
-              name,
-              // email,
-              //  tel
-            } = values;
+            const { name } = values;
             setSubmitting(false);
             onSubmit(name);
           }}
         >
           {({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
             <>
-              <div className="py-12 px-8 md:px-12 bg-white rounded">
-                <h2 className=" w-full pb-12 text-2xl">Your account</h2>
-                {loading.fetchSingle ? (
-                  <Loading />
-                ) : (
-                  <>
-                    <div className="flex flex-wrap">
-                      <form
-                        id="user_edit"
-                        onSubmit={handleSubmit}
-                        className="w-full md:w-1/2 md:pr-4 lg:pr-16"
-                        noValidate
-                      >
-                        <Input
-                          value={values.name}
-                          type="text"
-                          name="name"
-                          id="user_name"
-                          blur={handleBlur}
-                          action={handleChange}
-                          label="User name"
-                          errorMessage="name"
-                        />
-                        {/* <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={values.email}
-                          action={handleChange}
-                          label="Email"
-                          errorMessage="email"
-                          blur={handleBlur}
-                        /> */}
-                        {/* <Input
+              <PageContentWrapper>
+                <Title align="left">Your account</Title>
+                {/* <TabsWrapper>
+                  <Tab active type="button">
+                    Basic
+                  </Tab>
+                  <Tab type="button">Advanced</Tab>
+                </TabsWrapper> */}
+                <>
+                  <ContentWrapper>
+                    <Form id="user_edit" onSubmit={handleSubmit} noValidate>
+                      <Input
+                        value={values.name}
+                        type="text"
+                        name="name"
+                        id="user_name"
+                        blur={handleBlur}
+                        action={handleChange}
+                        label="User name"
+                        errorMessage="name"
+                      />
+                      {/* <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={values.email}
+                        action={handleChange}
+                        label="Email"
+                        errorMessage="email"
+                        blur={handleBlur}
+                      />
+                      <Input
+                        name="password"
+                        type="password"
+                        id="password"
+                        label="Password"
+                        errorMessage="password"
+                        value={values.password}
+                        action={handleChange}
+                        blur={handleBlur}
+                      /> */}
+                      {/* <Input
                       id="tel"
                       name="tel"
                       type="text"
@@ -126,46 +203,35 @@ const AccountForm = ({ loading, userEdit, open, onOpen, onClose }) => {
                       errorMessage="tel"
                       blur={handleBlur}
                     /> */}
-                      </form>
-                      <div className="w-full md:w-1/2 md:pl-4 lg:pl-16">
-                        {/* <ImageUpload url={formData.img} getImageFile={getImageFile} /> */}
-                      </div>
-                      <div className="flex flex-col md:flex-row md:justify-center pt-12 w-full border-t-2 border-gray-400 border-solid">
-                        <button
-                          className="w-full md:w-auto cursor-pointer text-center mb-4 md:ml-4 md:order-2 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:border-black hover:text-black text-green-500"
-                          type="submit"
-                          form="user_edit"
-                          disabled={isSubmitting}
-                        >
-                          Save changes
-                        </button>
-                        <Link
-                          to="/yourStorage"
-                          className="w-full md:w-auto cursor-pointer text-center mb-4 md:mr-4 duration-200 text-base px-4 md:px-16 py-2 leading-none rounded border-solid border-2 shadow border-red-500 bg-white hover:border-black hover:text-black text-red-500"
-                          type="button"
-                        >
+                    </Form>
+                    <ImageLoaderWrapper>
+                      {/* <ImageUpload url={formData.img} getImageFile={getImageFile} /> */}
+                    </ImageLoaderWrapper>
+                    <ButtonsWrapper>
+                      <Link to="/yourStorage" type="button">
+                        <Button reverse>
+                          <ArrowBackIosIcon />
                           Back
-                        </Link>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
+                        </Button>
+                      </Link>
+                      <Button type="submit" form="user_edit" disabled={isSubmitting}>
+                        Save changes
+                      </Button>
+                    </ButtonsWrapper>
+                  </ContentWrapper>
+                </>
+              </PageContentWrapper>
             </>
           )}
         </Formik>
       )}
-      {loading.userEdit && <Backdrop open={open} />}
     </>
   );
 };
 
 AccountForm.propTypes = {
   userEdit: PropTypes.func.isRequired,
-  loading: PropTypes.shape().isRequired,
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onOpen: PropTypes.func.isRequired,
+  // loading: PropTypes.shape().isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -179,4 +245,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withBackdrop(connect(mapStateToProps, mapDispatchToProps)(AccountForm));
+export default connect(mapStateToProps, mapDispatchToProps)(AccountForm);

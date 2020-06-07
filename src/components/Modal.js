@@ -1,6 +1,32 @@
 import React from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Dialog } from '@material-ui/core';
+import Button from './Button';
+
+const ModalInnerWrapper = styled.div`
+  padding: 40px 64px;
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: 4px;
+  box-shadow: ${({ theme }) => theme.shadows.basic};
+`;
+
+const ModalText = styled.p`
+  display: block;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: ${({ theme }) => theme.fontSizes.l};
+  @media ${({ theme }) => theme.breakpoints.md} {
+    font-size: ${({ theme }) => theme.fontSizes.xl};
+  }
+`;
+
+const ButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-gap: 16px;
+`;
 
 const Modal = ({ open, onClose, action, modalText, btnContent }) => {
   return (
@@ -10,27 +36,20 @@ const Modal = ({ open, onClose, action, modalText, btnContent }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <div className="px-16 py-10 bg-white rounded shadow">
-        <p className="bolck text-center mb-10 text-lg md:text-xl">{modalText}</p>
-        <div className="flex justify-center items-center">
-          <button
-            onClick={onClose}
-            type="button"
-            className="duration-200 text-base mx-5 px-4 py-2 leading-none rounded border-solid border-2 shadow border-green-500 bg-white hover:bg-green-200 text-green-500"
-          >
+      <ModalInnerWrapper>
+        <ModalText>{modalText}</ModalText>
+        <ButtonsWrapper>
+          <Button onClick={onClose} type="button" secondary>
             Cancel
-          </button>
+          </Button>
+
           {action && btnContent && (
-            <button
-              onClick={action}
-              type="button"
-              className="duration-200 text-base mx-5 px-4 py-2 leading-none rounded border-solid border-2 shadow border-red-500 bg-white hover:bg-red-200 text-red-500"
-            >
+            <Button onClick={action} type="button">
               {btnContent}
-            </button>
+            </Button>
           )}
-        </div>
-      </div>
+        </ButtonsWrapper>
+      </ModalInnerWrapper>
     </Dialog>
   );
 };

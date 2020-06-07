@@ -1,7 +1,122 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-// import { setImage as setImageAction } from 'services/productList/actions';
-import { connect } from 'react-redux';
+import styled, { css } from 'styled-components';
+import FastfoodIcon from '@material-ui/icons/Fastfood';
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+`;
+
+const Label = styled.span`
+  display: block;
+  text-transform: uppercase;
+  line-height: 20px;
+  font-size: ${({ theme }) => theme.fontSizes.s};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  margin-bottom: 8px;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    width: 100%;
+  }
+`;
+
+const Message = styled.span`
+  padding: 8px 24px;
+  display: block;
+  border-radius: 4px;
+  box-shadow: ${({ theme }) => theme.shadows.basic};
+  font-size: ${({ theme }) => theme.fontSizes.s};
+  margin-bottom: 24px;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    font-size: ${({ theme }) => theme.fontSizes.m};
+    width: 100%;
+  }
+  ${({ isWarning }) =>
+    isWarning
+      ? css`
+          background-color: ${({ theme }) => theme.colors.lightDiscard};
+          color: ${({ theme }) => theme.colors.discard};
+        `
+      : css`
+          background-color: ${({ theme }) => theme.colors.lightAccept};
+          color: ${({ theme }) => theme.colors.accept};
+        `}
+`;
+
+const InnerWrapper = styled.div`
+  width: 100%;
+  padding-right: 24px;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    width: 50%;
+  }
+`;
+
+const ImagePreview = styled.img`
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 24px;
+  box-shadow: ${({ theme }) => theme.shadows.basic};
+  max-height: 300px;
+  max-width: 100%;
+`;
+
+const PlaceholderPreview = styled.label`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 128px;
+  width: 128px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  background-color: ${({ theme }) => theme.colors.lightGray};
+  cursor: pointer;
+`;
+
+const FoodIcon = styled(FastfoodIcon)`
+  height: 64px;
+  width: 64px;
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+const FileInput = styled.input`
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    width: 50%;
+  }
+`;
+
+const ChooseImgBtn = styled.label`
+  cursor: pointer;
+  text-align: center;
+  transition: 0.2s;
+  padding: 8px;
+  line-height: 16px;
+  border-radius: 4px;
+  border: 2px solid ${({ theme }) => theme.colors.primary};
+  font-size: ${({ theme }) => theme.fontSizes.m};
+  box-shadow: ${({ theme }) => theme.shadows.basic};
+  background-color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.primary};
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.darkGray};
+    color: ${({ theme }) => theme.colors.darkGray};
+  }
+`;
 
 const ImageUpload = ({ url, getImageFile }) => {
   const [preview, setPreview] = useState(url);
@@ -37,86 +152,33 @@ const ImageUpload = ({ url, getImageFile }) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:flex-wrap mb-6">
-      <label
-        className="block md:w-full uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-        htmlFor="file"
-      >
-        Product image
-      </label>
-      {message.isMessage && (
-        <span
-          className={`py-2 px-6 block text-sm md:text-base md:w-full rounded shadow mb-6 ${
-            message.isWarning ? 'bg-red-200 text-red-400' : 'bg-green-200 text-green-600'
-          }`}
-        >
-          {message.messageText}
-        </span>
-      )}
-      <div className="w-full md:w-1/2 pr-6">
-        {preview && (
-          <img
-            className="animated-img shadow rounded mb-6"
-            style={{ maxHeight: '300px' }}
-            src={preview}
-            alt="product_image"
-          />
-        )}
+    <LoaderWrapper>
+      <Label>Product image</Label>
+      {message.isMessage && <Message isWarning={message.isWarning}>{message.messageText}</Message>}
+      <InnerWrapper>
+        {preview && <ImagePreview className="animated-img" src={preview} alt="product_image" />}
         {!preview && (
-          <label
-            htmlFor="file"
-            className="animated-img flex justify-center items-center h-32 w-32 rounded mb-6 bg-gray-200 cursor-pointer"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="37" viewBox="0 0 20 16">
-              <path
-                id="icon-image"
-                d="M4,4H20a2,2,0,0,1,2,2V18a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2.006,2.006,0,0,1,4,4Zm16,8.59V6H4v6.59l4.3-4.3a1,1,0,0,1,1.4,0l5.3,5.3,2.3-2.3a1,1,0,0,1,1.4,0l1.3,1.3Zm0,2.82-2-2-2.3,2.3a1,1,0,0,1-1.4,0L9,10.4l-5,5V18H20ZM15,10a1,1,0,1,1,1-1A1,1,0,0,1,15,10Z"
-                transform="translate(-2 -4)"
-                fill="#fff"
-              />
-            </svg>
-          </label>
+          <PlaceholderPreview htmlFor="file" className="animated-img">
+            <FoodIcon />
+          </PlaceholderPreview>
         )}
-      </div>
-      <input
-        id="file"
-        onChange={handleImageChange}
-        type="file"
-        accept="image/*"
-        style={{
-          width: '0.1px',
-          height: '0.1px',
-          opacity: 0,
-          overflow: 'hidden',
-          position: 'absolute',
-          zIndex: '-1',
-        }}
-      />
+      </InnerWrapper>
+      <FileInput id="file" onChange={handleImageChange} type="file" accept="image/*" />
 
-      <div className="flex flex-col md:w-1/2">
-        <label
-          className="cursor-pointer text-center mb-4 duration-200 text-base px-4 py-2 leading-none rounded border-solid border-2 shadow border-gray-600 bg-white hover:border-green-400 hover:text-green-400 text-gray-600"
-          htmlFor="file"
-        >
-          Choose image
-        </label>
-      </div>
-    </div>
+      <ButtonWrapper>
+        <ChooseImgBtn htmlFor="file">Choose image</ChooseImgBtn>
+      </ButtonWrapper>
+    </LoaderWrapper>
   );
 };
 
 ImageUpload.propTypes = {
   url: PropTypes.string,
   getImageFile: PropTypes.func.isRequired,
-  // setImage: PropTypes.func.isRequired,
 };
 
 ImageUpload.defaultProps = {
   url: null,
 };
 
-// const mapDispatchToProps = (dispatch) => ({
-//   setImage: (image) => dispatch(setImageAction(image)),
-// });
-
-export default connect(null, null)(ImageUpload);
+export default ImageUpload;
