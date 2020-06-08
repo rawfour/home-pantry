@@ -9,12 +9,21 @@ import PageContentWrapper from '../components/page/PageContentWrapper';
 import Title from '../components/page/PageTitle';
 
 const InnerWrapper = styled.div`
-  display: flex;
+  display: grid;
+  grid-gap: 24px;
+  justify-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  align-items: center;
   padding: 16px 0;
-  grid-gap: 16px;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    grid-template-columns: repeat(2, 300px);
+  }
+  @media ${({ theme }) => theme.breakpoints.lg} {
+    grid-template-columns: repeat(3, 300px);
+  }
+  @media ${({ theme }) => theme.breakpoints.xl} {
+    grid-template-columns: repeat(4, 300px);
+  }
 `;
 
 const EmptyListInfo = styled.div`

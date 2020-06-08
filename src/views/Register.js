@@ -30,7 +30,6 @@ const ButtonsWrapper = styled.div`
 
 const InnerWrapper = styled.div`
   width: 100%;
-  grid-gap: 10px;
   display: inline-flex;
   flex-direction: column;
   margin: 0 auto;
@@ -44,6 +43,10 @@ const Separator = styled.span`
   font-weight: ${({ theme }) => theme.fontWeights.bold};
   font-size: ${({ theme }) => theme.fontSizes.s};
   text-align: center;
+`;
+
+const StyledButton = styled(Button)`
+  margin: 8px 0;
 `;
 
 const ValidationSchema = Yup.object().shape({
@@ -131,14 +134,14 @@ const Register = ({ history, firebaseInitialized }) => {
 
           <ButtonsWrapper>
             <InnerWrapper>
-              <Button longer type="submit" form="register" disabled={isSubmitting}>
+              <StyledButton longer type="submit" form="register" disabled={isSubmitting}>
                 Register
-              </Button>
+              </StyledButton>
               <Separator>- or -</Separator>
               <Link to="/login">
-                <Button longer reverse>
+                <StyledButton longer reverse>
                   Go back to Login
-                </Button>
+                </StyledButton>
               </Link>
             </InnerWrapper>
           </ButtonsWrapper>

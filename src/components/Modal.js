@@ -23,9 +23,12 @@ const ModalText = styled.p`
 
 const ButtonsWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  grid-gap: 16px;
+  @media ${({ theme }) => theme.breakpoints.lg} {
+    flex-direction: row;
+  }
 `;
 
 const Modal = ({ open, onClose, action, modalText, btnContent }) => {

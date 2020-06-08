@@ -11,7 +11,6 @@ import Button from '../components/Button';
 const ButtonsWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  grid-gap: 15px;
   padding-top: 48px;
   width: 100%;
   border-top: 2px solid ${({ theme }) => theme.colors.lightGray};

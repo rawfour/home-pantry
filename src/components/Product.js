@@ -56,7 +56,6 @@ const ContentWrapper = styled.div`
     css`
       padding: 0 0 0 8px;
       justify-content: flex-end;
-      grid-gap: 16px;
     `}
 `;
 
@@ -73,6 +72,7 @@ const EditButton = styled.button`
   width: 35px;
   transition: 0.1s;
   transform: scale(1);
+  margin-right: 5px;
   &:hover {
     transform: scale(1.1);
   }
@@ -96,6 +96,7 @@ const TrashButton = styled.button`
   width: 35px;
   transition: 0.1s;
   transform: scale(1);
+  margin-left: 5px;
   &:hover {
     transform: scale(1.1);
   }

@@ -42,5 +42,5 @@ Project uses:
 - Redux + Redux Thunk
 - Backend: Firebase
 - Formik
-- Tailwindcss
+- Styled Components
 - Tools: ESlint, Husky + lint-staged

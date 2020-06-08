@@ -73,8 +73,7 @@ const MenuWrapper = styled.div`
 const LeftSide = styled.div`
   display: flex;
   flex-direction: column;
-  grid-gap: 16px;
-  margin: 24px 0 16px 0;
+  margin-top: 24px;
   @media ${({ theme }) => theme.breakpoints.lg} {
     flex-direction: row;
     flex-grow: 1;
@@ -91,6 +90,7 @@ const LeftSideButton = styled.button`
   align-items: center;
   transition: 0.2s;
   height: 100%;
+  margin: 8px 0;
   background-color: transparent;
   border: none;
   color: ${({ theme }) => theme.colors.white};
@@ -98,6 +98,7 @@ const LeftSideButton = styled.button`
     color: ${({ theme }) => theme.colors.activeLink};
   }
   @media ${({ theme }) => theme.breakpoints.lg} {
+    margin: 0 8px;
     display: inline-flex;
   }
 `;
@@ -111,12 +112,17 @@ const RightSide = styled.div`
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  grid-gap: 16px;
   @media ${({ theme }) => theme.breakpoints.lg} {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    grid-gap: 10px;
+  }
+`;
+
+const StyledButton = styled(Button)`
+  margin: 8px 0;
+  @media ${({ theme }) => theme.breakpoints.lg} {
+    margin: 0 8px;
   }
 `;
 
@@ -160,36 +166,36 @@ const Header = ({ history, userLogout, isAuth }) => {
           {isAuth && (
             <>
               <Link to="/addProduct">
-                <Button white>
+                <StyledButton white>
                   <AddIcon />
                   Add product
-                </Button>
+                </StyledButton>
               </Link>
 
               <Link to="/shoppingList">
-                <Button white>
+                <StyledButton white>
                   <ShoppingCartIcon />
                   Shopping List
-                </Button>
+                </StyledButton>
               </Link>
             </>
           )}
           {!isAuth && (
             <>
               <Link to="/login">
-                <Button white>Sign in</Button>
+                <StyledButton white>Sign in</StyledButton>
               </Link>
 
               <Link to="/register">
-                <Button white>Sign up</Button>
+                <StyledButton white>Sign up</StyledButton>
               </Link>
             </>
           )}
 
           {isAuth && (
-            <Button wAuto type="button" onClick={() => handleLogout()} secondary>
+            <StyledButton wAuto type="button" onClick={() => handleLogout()} secondary>
               Logout
-            </Button>
+            </StyledButton>
           )}
         </RightSide>
       </MenuWrapper>

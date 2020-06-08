@@ -54,10 +54,17 @@ const ButtonsWrapper = styled.div`
   padding-top: 48px;
   width: 100%;
   border-top: 2px solid ${({ theme }) => theme.colors.lightGray};
-  grid-gap: 16px;
   @media ${({ theme }) => theme.breakpoints.md} {
     flex-direction: row;
     justify-content: center;
+    align-items: center;
+  }
+`;
+
+const StyledButton = styled(Button)`
+  margin: 8px 0;
+  @media ${({ theme }) => theme.breakpoints.md} {
+    margin: 0 8px;
   }
 `;
 
@@ -196,14 +203,14 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, loading, open, onOpen, 
                     </ImageLoaderWrapper>
                     <ButtonsWrapper>
                       <Link to="/yourStorage" type="button">
-                        <Button reverse>
+                        <StyledButton reverse>
                           <ArrowBackIosIcon />
                           Back
-                        </Button>
+                        </StyledButton>
                       </Link>
-                      <Button type="submit" form="edit" disabled={isSubmitting}>
+                      <StyledButton type="submit" form="edit" disabled={isSubmitting}>
                         Save changes
-                      </Button>
+                      </StyledButton>
                     </ButtonsWrapper>
                   </ContentWrapper>
                 </>

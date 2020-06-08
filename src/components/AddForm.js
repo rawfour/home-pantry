@@ -48,7 +48,6 @@ const ButtonsWrapper = styled.div`
   padding-top: 48px;
   width: 100%;
   border-top: 2px solid ${({ theme }) => theme.colors.lightGray};
-  grid-gap: 16px;
   @media ${({ theme }) => theme.breakpoints.md} {
     flex-direction: row;
     justify-content: center;
