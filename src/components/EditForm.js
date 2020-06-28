@@ -101,18 +101,19 @@ const EditForm = ({ id, editProduct, fetchSingleProduct, loading, open, onOpen, 
     setImage(file);
   };
 
-  const handleActionDone = () => {
-    setActionDone(true);
-    setTimeout(() => {
-      setActionDone(false);
-    }, 4000);
-  };
+  useEffect(() => {
+    if (actionDone) {
+      const timer = setTimeout(() => setActionDone(false), 4000);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [actionDone]);
 
   const onSubmit = async (name, category, unit, currently) => {
     onOpen();
     await editProduct(id, name, category, image, formData.img, unit, currently);
     onClose();
-    handleActionDone();
+    setActionDone(true);
   };
 
   return (

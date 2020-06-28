@@ -1,11 +1,5 @@
 import { AUTHENTICATION_STATE } from 'services/actionTypes';
-import {
-  isInitialized,
-  logout,
-  updateUserName,
-  // updateUserEmail,
-  // reauthUser,
-} from '../../firebase/index';
+import { isInitialized, logout } from '../../firebase/index';
 
 export const firebaseInitialized = () => async (dispatch) => {
   const value = await isInitialized();
@@ -21,10 +15,4 @@ export const userLogout = () => async (dispatch) => {
     type: AUTHENTICATION_STATE,
     payload: false,
   });
-};
-
-export const userEdit = (name) => async () => {
-  // await reauthUser;
-  // await updateUserEmail(email);
-  await updateUserName(name);
 };

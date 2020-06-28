@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+
 import styled from 'styled-components'; // , { css }
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
@@ -10,8 +10,7 @@ import Input from './Input';
 import Title from './page/PageTitle';
 import PageContentWrapper from './page/PageContentWrapper';
 // import ImageUpload from './ImageUpload';
-import { userEdit as userEditAction } from '../services/authentication/actions';
-import { getCurrentUserProfile } from '../firebase/index';
+import { updateUserName, getCurrentUserProfile } from '../firebase/index';
 // import Basic from './userAccount/Basic';
 // import Advanced from './userAccount/Advanced';
 import MessageDone from './MessageDone';
@@ -119,28 +118,30 @@ const ValidationSchema = Yup.object().shape({
   //   .required('Required'),
 });
 
-const AccountForm = ({ userEdit }) => {
+const AccountForm = () => {
   const [formData, setFormData] = useState({});
   const [actionDone, setActionDone] = useState(false);
 
   useEffect(() => {
-    async function getCurrentUser() {
-      const currentUser = await getCurrentUserProfile();
-      setFormData(currentUser);
-    }
-    getCurrentUser();
+    const unsubscribe = () => {
+      const user = getCurrentUserProfile();
+      setFormData(user);
+    };
+
+    return unsubscribe();
   }, []);
 
-  const handleActionDone = () => {
-    setActionDone(true);
-    setTimeout(() => {
-      setActionDone(false);
-    }, 4000);
-  };
+  useEffect(() => {
+    if (actionDone) {
+      const timer = setTimeout(() => setActionDone(false), 4000);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [actionDone]);
 
-  const onSubmit = async (name) => {
-    await userEdit(name);
-    handleActionDone();
+  const onSubmit = (name) => {
+    updateUserName(name);
+    setActionDone(true);
   };
 
   return (
@@ -235,15 +236,6 @@ const AccountForm = ({ userEdit }) => {
   );
 };
 
-AccountForm.propTypes = {
-  userEdit: PropTypes.func.isRequired,
-  // loading: PropTypes.shape().isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  userEdit: (name, email) => dispatch(userEditAction(name, email)),
-});
-
 const mapStateToProps = (state) => {
   const { loading } = state.loading;
   return {
@@ -251,4 +243,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountForm);
+export default connect(mapStateToProps, null)(AccountForm);

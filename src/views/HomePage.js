@@ -7,6 +7,7 @@ import { getCurrentUserProfile } from '../firebase/index';
 import PagecontentWrapper from '../components/page/PageContentWrapper';
 import Title from '../components/page/PageTitle';
 import Button from '../components/Button';
+import GuestInfo from '../components/GuestInfo';
 
 const ButtonsWrapper = styled.div`
   display: flex;
@@ -24,13 +25,18 @@ const HomePage = ({ isAuth }) => {
   const [userInfo, setUserInfo] = useState(false);
 
   useEffect(() => {
-    const currentUser = getCurrentUserProfile();
-    setUserInfo(currentUser);
+    const unsubscribe = () => {
+      const currentUser = getCurrentUserProfile();
+      setUserInfo(currentUser);
+    };
+
+    return unsubscribe();
   }, []);
 
   return (
     <PagecontentWrapper>
       <Title>Welcome in your home pantry {userInfo ? userInfo.name : 'guest'}!</Title>
+      {!userInfo && <GuestInfo />}
       <ButtonsWrapper>
         {isAuth ? (
           <Link to="/yourStorage">

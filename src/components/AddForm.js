@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
@@ -96,18 +96,19 @@ const AddForm = ({ addProduct, loading, open, onOpen, onClose }) => {
     setImage(file);
   };
 
-  const handleActionDone = () => {
-    setActionDone(true);
-    setTimeout(() => {
-      setActionDone(false);
-    }, 4000);
-  };
+  useEffect(() => {
+    if (actionDone) {
+      const timer = setTimeout(() => setActionDone(false), 4000);
+      return () => clearTimeout(timer);
+    }
+    return null;
+  }, [actionDone]);
 
   const onSubmit = async (name, category, unit, isMax, isLow, currently) => {
     onOpen();
     await addProduct(name, category, image, unit, isMax, isLow, currently);
     onClose();
-    handleActionDone();
+    setActionDone(true);
   };
 
   return (

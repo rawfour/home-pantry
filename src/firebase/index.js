@@ -89,18 +89,9 @@ export const updateUserEmail = (email) => {
 };
 
 export const updateUserName = (name) => {
-  const user = auth.currentUser;
-
-  user
-    .updateProfile({
-      displayName: name,
-    })
-    .then(() => {
-      return true;
-    })
-    .catch((error) => {
-      alert(`Error: ${error}`);
-    });
+  auth.currentUser.updateProfile({
+    displayName: name,
+  });
 };
 
 export const getCurrentUserPantry = async () => {
