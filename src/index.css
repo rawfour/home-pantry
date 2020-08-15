@@ -34,6 +34,10 @@
   transform: translateX(-50%);
 }
 
+.page::-webkit-scrollbar {
+  display: none;
+}
+
 .page-enter {
   opacity: 0;
 }

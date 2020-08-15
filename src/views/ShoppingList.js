@@ -45,9 +45,13 @@ const ShoppingList = ({ getShoppingList, shoppingList, loading }) => {
       {loading.shoppingList ? (
         <Loading />
       ) : (
-        <InnerWrapper>
+        <>
           {shoppingList.length ? (
-            shoppingList.map((item) => <ProductToBuy key={item.id} product={item} />)
+            <InnerWrapper>
+              {shoppingList.map((item) => (
+                <ProductToBuy key={item.id} product={item} />
+              ))}
+            </InnerWrapper>
           ) : (
             <EmptyListInfo>
               Nothing to buy,
@@ -58,7 +62,7 @@ const ShoppingList = ({ getShoppingList, shoppingList, loading }) => {
               </span>
             </EmptyListInfo>
           )}
-        </InnerWrapper>
+        </>
       )}
     </PageContentWrapper>
   );
