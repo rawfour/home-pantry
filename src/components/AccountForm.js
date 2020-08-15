@@ -16,37 +16,6 @@ import { updateUserName, getCurrentUserProfile } from '../firebase/index';
 import MessageDone from './MessageDone';
 import Button from './Button';
 
-// const TabsWrapper = styled.div`
-//   display: flex;
-// `;
-
-// const Tab = styled.span`
-//   flex-basis: 50%;
-//   background-color: #edf2f7;
-//   padding: 10px;
-//   box-shadow: 0 -3px 3px 0 rgba(0, 0, 0, 0.05);
-//   color: #4a5568;
-//   outline: 0;
-//   cursor: pointer;
-//   text-align: center;
-//   &:first-child {
-//     border-radius: 3px 0 0 3px;
-//   }
-//   &:last-child {
-//     border-radius: 0 3px 3px 0;
-//   }
-//   ${({ active }) =>
-//     active &&
-//     css`
-//       background-color: #ffffff;
-//       transform: scale(1, 1.1);
-//       &:last-child,
-//       &:first-child {
-//         border-radius: 3px;
-//       }
-//     `}
-// `;
-
 const ContentWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -132,11 +101,8 @@ const AccountForm = () => {
   }, []);
 
   useEffect(() => {
-    if (actionDone) {
-      const timer = setTimeout(() => setActionDone(false), 4000);
-      return () => clearTimeout(timer);
-    }
-    return undefined;
+    const timer = setTimeout(() => setActionDone(false), 4000);
+    return () => clearTimeout(timer);
   }, [actionDone]);
 
   const onSubmit = (name) => {

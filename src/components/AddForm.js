@@ -97,11 +97,8 @@ const AddForm = ({ addProduct, loading, open, onOpen, onClose }) => {
   };
 
   useEffect(() => {
-    if (actionDone) {
-      const timer = setTimeout(() => setActionDone(false), 4000);
-      return () => clearTimeout(timer);
-    }
-    return null;
+    const timer = setTimeout(() => setActionDone(false), 4000);
+    return () => clearTimeout(timer);
   }, [actionDone]);
 
   const onSubmit = async (name, category, unit, isMax, isLow, currently) => {
